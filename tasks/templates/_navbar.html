@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container-fluid bg-white sticky-top">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-2 py-lg-0">
+            <a href="/" class="navbar-brand">
+                <img class="img-fluid" src="img/logo.jpeg" alt="Logo"> <!-- poner logo empresa-->
+            </a>
+            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto">
+                    <a href="/" class="nav-link">Inicio</a>
+                    <a href="/about" class="nav-item nav-link">Acerca De Nosotros</a>
+                    <a href="product.html" class="nav-item nav-link">Productos</a>
+                    <a href="store.html" class="nav-item nav-link">Servicios</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Paginas</a>
+                        <div class="dropdown-menu bg-light rounded-0 m-0">
+                            <a href="blog.html" class="dropdown-item">Articulo Destacado</a>
+                            <a href="/signin" class="nav-link">Iniciar Sesion</a>
+                            <a href="/signup" class="nav-link">Registrarse</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link">Contacto</a>
+                </div>
+                <div class="border-start ps-4 d-none d-lg-block">
+                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <div class="container">
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    
+                  </li>
+                  {% if user.is_authenticated %}
+                  <li class="nav-item">
+                    <a href="{% url 'tasks_completed' %}" class="nav-link"
+                      >complted tasks</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'tasks' %}" class="nav-link">Tasks</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'create_task' %}" class="nav-link">Create Task</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                    
+                  </li>
+                  <li class="nav-item">
+                    
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
+
