@@ -60,10 +60,13 @@ def create_task(request):
 def home(request):
     return render(request, 'home.html')
 
-#nuevio, url about
+#about
 def about(request):
     return render(request, 'about.html')
 
+#productos
+def product(request):
+    return render(request, 'product.html')
 
 
 @login_required
