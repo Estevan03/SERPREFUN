@@ -99,6 +99,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+##pruebita
+AUTH_USER_MODEL = 'tasks.CustomUser'
 
 
 # Internationalization

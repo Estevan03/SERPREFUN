@@ -6,8 +6,12 @@
   {{error}}
 
   <form action="/signup/" method="POST">
-    {% csrf_token %} {{form.as_p}}
+    {% csrf_token %}
+    {{ form.username.label_tag }} {{ form.username }}
+    {{ form.password1.label_tag }} {{ form.password1 }}
+    {{ form.password2.label_tag }} {{ form.password2 }}
+    {{ form.role.label_tag }} {{ form.role }}
     <button class="btn btn-primary">Signup</button>
-  </form>
+</form>
 </div>
 {% endblock %}

@@ -1,34 +1,36 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.models import User
-from django.db import IntegrityError
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from .models import Task
+from .models import *
+from django.contrib.auth import login, logout, authenticate
+from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm
 
-from .forms import TaskForm
-
-
-# Create your views here.
-
-
+# Vista para el registro
 def signup(request):
-    if request.method == 'GET':
-        return render(request, 'signup.html', {"form": UserCreationForm})
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('tasks')
     else:
+        form = CustomUserCreationForm()
+    return render(request, 'signup.html', {'form': form})
 
-        if request.POST["password1"] == request.POST["password2"]:
-            try:
-                user = User.objects.create_user(
-                    request.POST["username"], password=request.POST["password1"])
-                user.save()
-                login(request, user)
-                return redirect('tasks')
-            except IntegrityError:
-                return render(request, 'signup.html', {"form": UserCreationForm, "error": "Username already exists."})
+# Vista para el inicio de sesión
+def signin(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('tasks')
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'signin.html', {'form': form})
 
-        return render(request, 'signup.html', {"form": UserCreationForm, "error": "Passwords did not match."})
+
+
 
 
 @login_required
@@ -68,24 +70,23 @@ def about(request):
 def product(request):
     return render(request, 'product.html')
 
+#Servicios
+def store(request):
+    return render(request, 'store.html')
+
+#Articulo destacado
+def blog(request):
+    return render(request, 'blog.html')
+
+#Articulo destacado
+def contact(request):
+    return render(request, 'contact.html')
 
 @login_required
 def signout(request):
     logout(request)
     return redirect('home')
 
-
-def signin(request):
-    if request.method == 'GET':
-        return render(request, 'signin.html', {"form": AuthenticationForm})
-    else:
-        user = authenticate(
-            request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
-            return render(request, 'signin.html', {"form": AuthenticationForm, "error": "Username or password is incorrect."})
-
-        login(request, user)
-        return redirect('tasks')
 
 @login_required
 def task_detail(request, task_id):

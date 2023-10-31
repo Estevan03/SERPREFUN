@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 # Create your models here.
 
@@ -9,7 +10,16 @@ class Task(models.Model):
   created = models.DateTimeField(auto_now_add=True)
   datecompleted = models.DateTimeField(null=True, blank=True)
   important = models.BooleanField(default=False)
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
   def __str__(self):
     return self.title + ' - ' + self.user.username
+
+
+class CustomUser(AbstractUser):
+    ROLES = (
+        ('admin', 'Administrador'),
+        ('empleado', 'Empleado'),
+        ('nuevo_usuario', 'Nuevo Usuario'),
+    )
+    role = models.CharField(max_length=20, choices=ROLES, default='nuevo_usuario')

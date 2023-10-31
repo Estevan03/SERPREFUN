@@ -8,12 +8,12 @@
 {{error}}
 </p>
 
-<form action="/signin/" method="POST">
+<form action= "{% url 'signin' %}" method="POST">
   {% csrf_token %}
-  {{form.as_p}}
-  <button>
-    Signin
-  </button>
+  {{ form.username.label_tag }} {{ form.username }}
+  {{ form.password.label_tag }} {{ form.password }}
+  {{ form.role.label_tag }} {{ form.role }}
+  <button>Signin</button>
 </form>
 
 {% endblock %}
