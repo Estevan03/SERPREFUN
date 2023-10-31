@@ -1,16 +1,19 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
   <div class="container-fluid bg-white sticky-top">
     <div class="container">
         <nav class="navbar navbar-expand-lg bg-white navbar-light py-2 py-lg-0">
             <a href="/" class="navbar-brand">
-                <img class="img-fluid" src="img/logo.jpeg" alt="Logo"> <!-- poner logo empresa-->
+                <img class="img-fluid" src="{% static 'img/logo.jpeg' %}" alt="Logo">
             </a>
             <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -18,17 +21,12 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto">
                     <a href="/" class="nav-link">Inicio</a>
-                    <a href="/about" class="nav-item nav-link">Acerca De Nosotros</a>
+                    <a href="/about" class="nav-item nav-link">Nosotros</a>
                     <a href="/product" class="nav-item nav-link">Productos</a>
                     <a href="/store" class="nav-item nav-link">Servicios</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Paginas</a>
-                        <div class="dropdown-menu bg-light rounded-0 m-0">
-                            <a href="/blog" class="dropdown-item">Articulo Destacado</a>
-                            <a href="/signin" class="nav-link">Iniciar Sesion</a>
-                            <a href="/signup" class="nav-link">Registrarse</a>
-                        </div>
-                    </div>
+                    <a href="/blog" class="nav-item nav-link">Destacado</a>
+                    <a href="/signin" class="nav-link">Sigin</a>
+                    <a href="/signup" class="nav-link">Signup</a>
                     <a href="/contact" class="nav-item nav-link">Contacto</a>
                 </div>
                 <div class="border-start ps-4 d-none d-lg-block">
