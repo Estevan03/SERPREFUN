@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  <script src="{% static 'js/main.js' %}"></script>
+</head>
+<body>
+  <div class="container-fluid bg-white sticky-top">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-2 py-lg-0">
+            <a href="/" class="navbar-brand">
+                <img class="img-fluid" src="{% static 'img/logo.jpeg' %}" alt="Logo">
+            </a>
+            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto">
+                    <a href="/" class="nav-link">Inicio</a>
+                    <a href="/about" class="nav-item nav-link">Nosotros</a>
+                    <a href="/product" class="nav-item nav-link">Productos</a>
+                    <a href="/store" class="nav-item nav-link">Servicios</a>
+                    <a href="/blog" class="nav-item nav-link">Destacado</a>
+                    <a href="/signin" class="nav-link">Sigin</a>
+                    <a href="/signup" class="nav-link">Signup</a>
+                    <a href="/contact" class="nav-item nav-link">Contacto</a>
+                </div>
+                <div class="border-start ps-4 d-none d-lg-block">
+                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <div class="container">
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    
+                  </li>
+                  {% if user.is_authenticated %}
+                  <li class="nav-item">
+                    <a href="{% url 'tasks_completed' %}" class="nav-link"
+                      >complted tasks</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'tasks' %}" class="nav-link">Tasks</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'create_task' %}" class="nav-link">Create Task</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                    
+                  </li>
+                  <li class="nav-item">
+                    
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
+

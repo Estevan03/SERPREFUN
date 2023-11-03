@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Signin</h1>
+
+<p>
+{{error}}
+</p>
+
+<form action= "{% url 'signin' %}" method="POST">
+  {% csrf_token %}
+  {{ form.username.label_tag }} {{ form.username }}
+  {{ form.password.label_tag }} {{ form.password }}
+  {{ form.role.label_tag }} {{ form.role }}
+  <button>Signin</button>
+</form>
+
+{% endblock %}
