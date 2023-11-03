@@ -30,7 +30,21 @@ def signin(request):
     return render(request, 'signin.html', {'form': form})
 
 
+#Vista para recuperar contraseña
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
+# Password reset views
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'password_reset.html'
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'password_reset_confirm.html'
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'password_reset_complete.html'
 
 
 @login_required
