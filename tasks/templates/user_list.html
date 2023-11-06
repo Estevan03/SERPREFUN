@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Usuarios</title>
+</head>
+<body>
+    <h1>Lista de Usuarios</h1>
+    <ul>
+        {% for user in users %}
+            <li>
+                {{ user.username }} - Rol: {{ user.get_role_display }}
+                <a href="{% url 'editar_usuario' user.id %}">Editar</a>
+                {% if user.is_active %}
+                    <form action="{% url 'desactivar_usuario' user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Desactivar</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'activar_usuario' user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Activar</button>
+                    </form>
+                {% endif %}
+                <a href="{% url 'ver_perfil' user.id %}">Ver perfil</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'tasks' %}">Regresar</a>
+</body>
+</html>

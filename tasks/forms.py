@@ -18,3 +18,8 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
         model = CustomUser
+
+class CustomUserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'role']

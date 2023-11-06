@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from django.contrib.auth import login, logout, authenticate
 from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth.models import User
+from tasks.forms import CustomUserForm
+
+
 
 # Vista para el registro
 def signup(request):
@@ -131,3 +135,40 @@ def delete_task(request, task_id):
     if request.method == 'POST':
         task.delete()
         return redirect('tasks')
+
+#Vista para listar los usuarios en una plantilla del admin
+@user_passes_test(lambda user: user.is_staff)
+@login_required
+def user_list(request):
+    users = CustomUser.objects.all()
+    return render(request, 'user_list.html', {'users': users})
+
+#Vista para activar y desactivar usuarios, ver perfil y editar usuarios
+def activar_usuario(request, user_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+    user.is_active = True
+    user.save()
+    return redirect('user_list')
+
+def desactivar_usuario(request, user_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+    user.is_active = False
+    user.save()
+    return redirect('user_list')
+
+def ver_perfil(request, user_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+    return render(request, 'ver_perfil.html', {'user': user})
+
+def editar_usuario(request, user_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+
+    if request.method == 'POST':
+        form = CustomUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_list')  # Redirige de nuevo a la lista de usuarios después de guardar los cambios
+    else:
+        form = CustomUserForm(instance=user)
+
+    return render(request, 'editar_usuario.html', {'form': form, 'user': user})
