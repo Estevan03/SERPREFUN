@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth.models import User
 from tasks.forms import CustomUserForm
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 
 
@@ -32,10 +33,6 @@ def signin(request):
     else:
         form = CustomAuthenticationForm()
     return render(request, 'signin.html', {'form': form})
-
-
-#Vista para recuperar contraseña
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 # Password reset views
 class CustomPasswordResetView(PasswordResetView):
