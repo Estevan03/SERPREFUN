@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.core.validators import validate_email
 
 # Create your models here.
 
@@ -23,3 +24,7 @@ class CustomUser(AbstractUser):
         ('nuevo_usuario', 'Nuevo Usuario'),
     )
     role = models.CharField(max_length=20, choices=ROLES, default='nuevo_usuario')
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'role']

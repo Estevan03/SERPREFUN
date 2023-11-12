@@ -22,20 +22,22 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto">
-                    <a href="/" class="nav-item nav-link">Inicio</a>
-                    <a href="/about" class="nav-item nav-link">Nosotros</a>
-                    <a href="/product" class="nav-item nav-link">Productos</a>
-                    <a href="/store" class="nav-item nav-link">Servicios</a>
-                    <a href="/blog" class="nav-item nav-link">Destacados</a>
-                    <a href="/signin" class="nav-link">Iniciar Sesion</a>
-                    <a href="/signup" class="nav-link">Registrarse</a>
-                    <a href="/contact" class="nav-item nav-link">Contacto</a>
-                </div>
-                <div class="border-start ps-4 d-none d-lg-block">
-                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
+              {% if not user.is_authenticated %}
+                  <div class="navbar-nav ms-auto">
+                      <a href="/" class="nav-item nav-link">Inicio</a>
+                      <a href="/about" class="nav-item nav-link">Nosotros</a>
+                      <a href="/product" class="nav-item nav-link">Productos</a>
+                      <a href="/store" class="nav-item nav-link">Servicios</a>
+                      <a href="/blog" class="nav-item nav-link">Destacados</a>
+                      <a href="/signin" class="nav-link">Iniciar Sesion</a>
+                      <a href="/signup" class="nav-link">Registrarse</a>
+                      <a href="/contact" class="nav-item nav-link">Contacto</a>
+                  </div>
+                  <div class="bord er-start ps-4 d-none d-lg-block">
+                      <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                  </div>
+              {% endif %}
+          </div>          
             <div class="container">
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">

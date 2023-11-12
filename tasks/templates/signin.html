@@ -3,9 +3,15 @@
 {% block content %}
 <h1>Signin</h1>
 
-<p>
-  {{ error }}
-</p>
+{% if messages %}
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
 
 <form action="{% url 'signin' %}" method="POST">
   {% csrf_token %}
@@ -15,6 +21,6 @@
   <button>Signin</button>
 </form>
 
-<p><a href="{% url 'password_reset' %}">¿Olvido su contraseña?</a></p>
-<p><a href="/signup" >Registrarse</a></p>
+<p><a href="{% url 'password_reset' %}">¿Olvidó su contraseña?</a></p>
+<p><a href="{% url 'signup' %}">Registrarse</a></p>
 {% endblock %}

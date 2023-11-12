@@ -28,4 +28,8 @@ urlpatterns = [
     path('activar_usuario/<int:user_id>/', views.activar_usuario, name='activar_usuario'),
     path('desactivar_usuario/<int:user_id>/', views.desactivar_usuario, name='desactivar_usuario'),
     path('ver_perfil/<int:user_id>/', views.ver_perfil, name='ver_perfil'),
+    path('servicio1/', views.servicio1, name='servicio1'),
+    path('servicio2/', views.servicio2, name='servicio2'),
+    path('servicio3/', views.servicio3, name='servicio3'),
+    path('manage_user_permissions/<int:user_id>/', views.manage_user_permissions, name='manage_user_permissions'),
 ]

@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
-from django.contrib.auth import login, logout, authenticate
-from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth import login, logout, authenticate, get_user_model
+from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm, UserPermissionForm
 from django.contrib.auth.models import User
 from tasks.forms import CustomUserForm
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib import messages
 
 
 
@@ -18,6 +19,8 @@ def signup(request):
             user = form.save()
             login(request, user)
             return redirect('tasks')
+        else:
+            messages.error(request, 'Error en el formulario. Por favor, verifica los datos ingresados.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form': form})
@@ -30,6 +33,8 @@ def signin(request):
             user = form.get_user()
             login(request, user)
             return redirect('tasks')
+        else:
+            messages.error(request, 'Credenciales incorrectas. Por favor, verifica tu correo y contraseña.')
     else:
         form = CustomAuthenticationForm()
     return render(request, 'signin.html', {'form': form})
@@ -97,6 +102,16 @@ def blog(request):
 def contact(request):
     return render(request, 'contact.html')
 
+#Servicios Exequiales
+def servicio1(request):
+    return render(request, 'servicio1.html')
+
+def servicio2(request):
+    return render(request, 'servicio2.html')
+
+def servicio3(request):
+    return render(request, 'servicio3.html')
+
 @login_required
 def signout(request):
     logout(request)
@@ -134,11 +149,20 @@ def delete_task(request, task_id):
         return redirect('tasks')
 
 #Vista para listar los usuarios en una plantilla del admin
-@user_passes_test(lambda user: user.is_staff)
 @login_required
+@user_passes_test(lambda user: user.is_staff)
 def user_list(request):
     users = CustomUser.objects.all()
-    return render(request, 'user_list.html', {'users': users})
+    users_with_permissions = []
+
+    for user in users:
+        permission_form = UserPermissionForm(initial={
+            'is_superuser': user.is_superuser,
+            'is_staff': user.is_staff,
+        })
+        users_with_permissions.append({'user': user, 'form': permission_form})
+
+    return render(request, 'user_list.html', {'users_with_permissions': users_with_permissions})
 
 #Vista para activar y desactivar usuarios, ver perfil y editar usuarios
 def activar_usuario(request, user_id):
@@ -169,3 +193,23 @@ def editar_usuario(request, user_id):
         form = CustomUserForm(instance=user)
 
     return render(request, 'editar_usuario.html', {'form': form, 'user': user})
+
+
+#Vista para dar permisos a administradores
+@user_passes_test(lambda user: user.is_superuser and user.role == 'admin')
+@login_required
+def manage_user_permissions(request, user_id):
+    user = get_object_or_404(get_user_model(), pk=user_id)
+    
+    if request.method == 'POST':
+        form = UserPermissionForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Permisos de usuario actualizados correctamente.')
+            return redirect('user_list')
+        else:
+            messages.error(request, 'Error en el formulario. Por favor, verifica los datos ingresados.')
+    else:
+        form = UserPermissionForm(instance=user)
+    
+    return render(request, 'manage_user_permissions.html', {'form': form, 'user': user})
