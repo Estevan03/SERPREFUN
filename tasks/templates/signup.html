@@ -1,0 +1,70 @@
+{% extends 'base.html' %} 
+{% block content %}
+<style>
+  .container {
+    
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    color: #008080;
+    text-align: center;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  label {
+    color: #008080;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #66bb6a;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  button {
+    background-color: #66bb6a;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #4caf50; /* Cambia el color al pasar el ratón sobre el botón */
+  }
+
+  a {
+    color: #008080;
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+  }
+</style>
+
+<div class="container">
+  <h1>Registro</h1>
+
+  {{ form.errors }}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Registrarse</button>
+  </form>
+
+  <p><a href="/signin">Iniciar Sesión</a></p>
+</div>
+
+{% endblock %}

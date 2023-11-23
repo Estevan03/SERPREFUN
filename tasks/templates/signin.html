@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .container {
+    
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    color: #008080;
+    text-align: center;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  label {
+    color: #008080;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #66bb6a;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  button {
+    background-color: #66bb6a;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;x
+  }
+
+  button:hover {
+    background-color: #4caf50; /* Cambia el color al pasar el ratón sobre el botón */
+  }
+
+  a {
+    color: #008080;
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+  }
+</style>
+<h1>Inicio</h1>
+
+{% if messages %}
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+<form action="{% url 'signin' %}" method="POST" style="background-color: #e0f2f1; padding: 20px; border-radius: 10px;">
+  {% csrf_token %}
+  <div style="margin-bottom: 30px; border-radius: 10px">
+    {{ form.username.label_tag }} {{ form.username }}
+  </div>
+  <div style="margin-bottom: 10px;">
+    {{ form.password.label_tag }} {{ form.password }}
+  </div>
+  <div style="margin-bottom: 10px;">
+    {{ form.role.label_tag }} {{ form.role }}
+  </div>
+  <button style="background-color: #66bb6a; color: #fff; padding: 10px; border: none; border-radius: 5px;">iniciar sesion</button>
+</form>
+
+<p><a href="{% url 'password_reset' %}" style="color: #008080;">¿Olvidó su contraseña?</a></p>
+<p><a href="{% url 'signup' %}" style="color: #008080;">Registrarse</a></p>
+{% endblock %}

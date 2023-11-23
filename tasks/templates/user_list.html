@@ -1,0 +1,118 @@
+<!-- user_list.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Usuarios</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #5e5e5e;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        li {
+            background-color: #ffffff;
+            border: 1px solid #dcdcdc;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: #ffffff;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        a.button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        a.button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head> 
+</head>
+<body>
+    <h1>Lista de Usuarios</h1>
+    <ul>
+        {% for user_with_permissions in users_with_permissions %}
+            <li>
+                {{ user_with_permissions.user.username }} - Rol: {{ user_with_permissions.user.get_role_display }}
+                <a href="{% url 'editar_usuario' user_with_permissions.user.id %}">Editar</a>
+
+                {% if user_with_permissions.user.role == 'admin' %}
+                    <form action="{% url 'manage_user_permissions' user_with_permissions.user.id %}" method="post">
+                        {% csrf_token %}
+                        {{ user_with_permissions.form.as_p }}
+                        <button type="submit">Guardar Permisos</button>
+                    </form>
+                {% endif %}
+
+                {% if user_with_permissions.user.is_active %}
+                    <form action="{% url 'desactivar_usuario' user_with_permissions.user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Desactivar</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'activar_usuario' user_with_permissions.user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Activar</button>
+                    </form>
+                {% endif %}
+
+                <a href="{% url 'ver_perfil' user_with_permissions.user.id %}">Ver perfil</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'tasks' %}">Regresar</a>
+</body>
+</html>
