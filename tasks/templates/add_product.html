@@ -1,0 +1,16 @@
+<!-- add_product.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Agregar Producto</h1>
+  <form method="post" action="{% url 'add_product' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Agregar producto</button>
+  </form>
+  
+  <!-- Agregar un enlace para agregar al carrito -->
+  {% if product.id %}
+    <a href="{% url 'add_to_cart' product_id=product.id %}">Agregar al carrito</a>
+  {% endif %}
+{% endblock %}

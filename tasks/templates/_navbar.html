@@ -14,57 +14,83 @@
 <body>
   <div class="container-fluid bg-white sticky-top">
     <div class="container">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light py-2 py-lg-0">
-            <a href="/" class="navbar-brand">
-                <img class="img-fluid" src="{% static 'img/logo.jpeg' %}" alt="Logo">
-            </a>
-            <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-              {% if not user.is_authenticated %}
-                  <div class="navbar-nav ms-auto">
-                      <a href="/" class="nav-item nav-link">Inicio</a>
-                      <a href="/about" class="nav-item nav-link">Nosotros</a>
-                      <a href="/product" class="nav-item nav-link">Productos</a>
-                      <a href="/store" class="nav-item nav-link">Servicios</a>
-                      <a href="/blog" class="nav-item nav-link">Destacados</a>
-                      <a href="/signin" class="nav-link">Iniciar Sesion</a>
-                      <a href="/signup" class="nav-link">Registrarse</a>
-                      <a href="/contact" class="nav-item nav-link">Contacto</a>
-                  </div>
-                  <div class="bord er-start ps-4 d-none d-lg-block">
-                      <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
-                  </div>
-              {% endif %}
-          </div>          
-            <div class="container">
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                    
-                  </li>
-                  {% if user.is_authenticated %}
+      <nav class="navbar navbar-expand-lg bg-white navbar-light py-2 py-lg-0">
+        <a href="/" class="navbar-brand">
+          <img class="img-fluid" src="{% static 'img/logo.jpeg' %}" alt="Logo">
+        </a>
+        <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          {% if not user.is_authenticated %}
+            <!-- Elementos para usuarios no autenticados -->
+            <div class="navbar-nav ms-auto">
+              <a href="/" class="nav-item nav-link">Inicio</a>
+              <a href="/about" class="nav-item nav-link">Nosotros</a>
+              <a href="/product" class="nav-item nav-link">Productos</a>
+              <a href="/store" class="nav-item nav-link">Servicios</a>
+              <a href="/blog" class="nav-item nav-link">Destacados</a>
+              <a href="/signin" class="nav-link">Iniciar Sesión</a>
+              <a href="/signup" class="nav-link">Registrarse</a>
+              <a href="/contact" class="nav-item nav-link">Contacto</a>
+            </div>
+            <div class="border-start ps-4 d-none d-lg-block">
+              <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+            </div>
+          {% else %}
+          
+          {% if user.is_authenticated %}
+          <div class="container">
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                {% if user.role == 'admin' %}
+                  <!-- Elementos para administradores -->
                   <li class="nav-item">
                     <a href="/usuarios/" class="nav-link">Usuarios</a>
                   </li>
+                {% endif %}
+                {% if user.role == 'cliente' %}
+                  <!-- Elementos para clientes -->
                   <li class="nav-item">
-                    <a class="nav-link" href="/logout">Cerrar Sesion</a>
-                  </li>
-                  {% else %}
-                  <li class="nav-item">
-                    
+                    <a href="/cliente_products" class="nav-link">Productos Cliente</a>
                   </li>
                   <li class="nav-item">
-                    
+                    <a href="/cliente_services" class="nav-link">Servicios Cliente</a>
                   </li>
-                  {% endif %}
+                  <li class="nav-item">
+                    <a href="{% url 'shopping_cart' %}" class="nav-link">Compras</a>
+                  </li>
+                {% endif %}
+                {% if user.role == 'empleado' %}
+                  <!-- Elementos para empleados -->
+                  <li class="nav-item">
+                    <a href="{% url 'product_list' %}" class="nav-link">Productos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/servicios" class="nav-link">Servicios</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/usuarios" class="nav-link">Usuarios</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/pedidos" class="nav-link">Pedidos</a>
+                  </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a href="/logout" class="nav-link">Cerrar Sesión</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% endif %}
                 </ul>
               </div>
             </div>
-        </nav>
+          {% endif %}
+        </div>
+      </nav>
     </div>
-</div>
+  </div>
 </body>
 </html>
-

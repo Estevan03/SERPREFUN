@@ -1,14 +1,17 @@
 from django.contrib import admin
-from .models import *
+from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
+from .models import CustomUser, Task
 
-
-# Register your models here.
 class TaskAdmin(admin.ModelAdmin):
-  readonly_fields = ('created', )
+    readonly_fields = ('created',)
 
-admin.site.register(Task, TaskAdmin)
+class CustomUserAdmin(UserAdmin):
+    list_display = UserAdmin.list_display + ('get_role_display',)
 
-class CustomUserAdmin(admin.ModelAdmin):
-  list_display = ['role']
+    def get_role_display(self, obj):
+        return obj.get_role_display()
+    get_role_display.short_description = _('Role')
+    get_role_display.admin_order_field = 'role'
 
 admin.site.register(CustomUser, CustomUserAdmin)

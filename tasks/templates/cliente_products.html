@@ -1,0 +1,14 @@
+<!-- cliente_products.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Productos Disponibles</h1>
+  <ul>
+    {% for product in products %}
+      <li>
+        {{ product.name }} - Precio: {{ product.price }}
+        <a href="{% url 'add_to_cart' product.id %}">Agregar al carrito</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

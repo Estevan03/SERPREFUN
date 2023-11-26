@@ -2,19 +2,22 @@
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Task, CustomUser
+from .models import Task, CustomUser, Product
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'description', 'important']
-
+      
+        
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField()
+    role = forms.ChoiceField(choices=CustomUser.ROLES, initial='cliente')
 
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'password1', 'password2', 'role']
+
 
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
@@ -29,3 +32,8 @@ class UserPermissionForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['is_superuser', 'is_staff']
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
