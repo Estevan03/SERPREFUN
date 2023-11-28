@@ -39,7 +39,10 @@ urlpatterns = [
     path('shopping-cart/', views.shopping_cart, name='shopping_cart'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('productos/', views.product_list, name='product_list'),
-    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('editar-producto/<int:product_id>/', views.edit_product, name='edit_product'),
     path('eliminar-producto/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('add_product/', views.add_product, name='add_product'),
+    path('remove-one/<int:product_id>/', views.remove_one, name='remove_one'),
+    path('remove-all/<int:product_id>/', views.remove_all, name='remove_all'),
+    path('add-one/<int:product_id>/', views.add_one, name='add_one'),
 ]

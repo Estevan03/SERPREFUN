@@ -53,7 +53,7 @@
                 {% if user.role == 'cliente' %}
                   <!-- Elementos para clientes -->
                   <li class="nav-item">
-                    <a href="/cliente_products" class="nav-link">Productos Cliente</a>
+                    <a href="{% url 'cliente_products' %}" class="nav-link">Productos Cliente</a>
                   </li>
                   <li class="nav-item">
                     <a href="/cliente_services" class="nav-link">Servicios Cliente</a>

@@ -1,18 +1,36 @@
 <!-- shopping_cart.html -->
+{% extends 'base.html' %}
 
-{% extends 'base.html' %} 
 {% block content %}
+  <h1>Carrito de Compras</h1>
 
-<h1>Carrito de Compras</h1>
-
-{% if cart_items %}
-  <ul>
-    {% for item in cart_items %}
-      <li>{{ item.product.name }} - Cantidad: {{ item.quantity }}</li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>El carrito de compras está vacío.</p>
-{% endif %}
-
+  {% if cart_items %}
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.product.price }}</td>
+            <td>${{ item.total }}</td>
+            <td>
+              <a href="{% url 'remove_one' item.product.id %}">Eliminar 1</a>
+              <a href="{% url 'remove_all' item.product.id %}">Eliminar todo</a>
+              <a href="{% url 'add_one' item.product.id %}">Agregar</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>El carrito de compras está vacío.</p>
+  {% endif %}
 {% endblock %}

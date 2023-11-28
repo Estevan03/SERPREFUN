@@ -7,8 +7,43 @@
     {% for product in products %}
       <li>
         {{ product.name }} - Precio: {{ product.price }}
-        <a href="{% url 'add_to_cart' product.id %}">Agregar al carrito</a>
+        <a href="#" onclick="addToCart({{ product.id }})">Agregar al carrito</a>
       </li>
     {% endfor %}
   </ul>
+
+  <!-- Mensaje de confirmación -->
+  {% if messages %}
+    <div class="alert alert-success">
+      <ul class="mb-0">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <script>
+    function addToCart(productId) {
+      $.ajax({
+        url: '{% url "add_to_cart" 0 %}'.replace('0', productId),
+        method: 'GET',
+        success: function(data) {
+          // Muestra el mensaje de confirmación solo si la solicitud tiene éxito
+          if (data.success) {
+            $('#confirmationMessage').text(data.message);
+            $('#confirmationMessage').show();
+          }
+
+          // Puedes agregar más lógica aquí según sea necesario
+        },
+        error: function(error) {
+          console.error('Error al agregar al carrito:', error);
+        }
+      });
+
+      return false;  // Esto evita que el enlace siga el href
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 {% endblock %}

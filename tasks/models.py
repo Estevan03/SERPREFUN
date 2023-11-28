@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'role']
-    
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -37,10 +37,19 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-      
+    
+# models.py
+class CartItem(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    cart = models.ForeignKey('ShoppingCart', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.product.name} - Cantidad: {self.quantity}"
+
 class ShoppingCart(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    product = models.ManyToManyField('tasks.Product')
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    products = models.ManyToManyField('Product', through='CartItem')
 
     def __str__(self):
         return f"Carrito de {self.user.username}"

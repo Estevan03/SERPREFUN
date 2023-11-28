@@ -10,6 +10,7 @@ from tasks.forms import CustomUserForm
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib import messages
 from .cart import Cart
+from django.http import JsonResponse
 
 
 
@@ -284,24 +285,89 @@ def delete_product(request, product_id):
     product.delete()
     return redirect('product_list')
 
+@login_required
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Guardar el producto en la base de datos
+            product = form.save()
+
+            # Obtener o crear el carrito para el usuario actual
+            cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+
+            # Crear o actualizar el CarritoItem
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            
+            # Incrementar la cantidad en 1
+            cart_item.quantity += 1
+            cart_item.save()
+
+            if request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+                # Si es una solicitud AJAX, devuelve una respuesta JSON
+                return JsonResponse({'success': True, 'message': 'Producto agregado al carrito exitosamente'})
+            
             return redirect('product_list')
     else:
         form = ProductForm()
     return render(request, 'add_product.html', {'form': form})
 
+
 @login_required
 def add_to_cart(request, product_id):
-    producto = Product.objects.get(id=product_id)
+    product = get_object_or_404(Product, pk=product_id)
     cart, created = ShoppingCart.objects.get_or_create(user=request.user)
-    cart.products.add(producto)
-    return redirect('cliente_products')
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+    
+    if not item_created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    messages.success(request, f"{product.name} se ha añadido al carrito.")
+    return redirect('product_list')
 
 #Vista carrito
+@login_required
 def shopping_cart(request):
-    cart_items = ShoppingCart.objects.filter(user=request.user)
+    # Obtener el carrito para el usuario actual
+    cart = ShoppingCart.objects.get(user=request.user)
+
+    # Obtener los elementos del carrito
+    cart_items = cart.cartitem_set.all()
+
+    # Calcular el valor total para cada artículo
+    for item in cart_items:
+        item.total = item.quantity * item.product.price
+
     return render(request, 'shopping_cart.html', {'cart_items': cart_items})
+
+#Vista eliminar 1 producto
+def remove_one(request, product_id):
+    cart_item = get_object_or_404(CartItem, cart__user=request.user, product__id=product_id)
+    
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
+
+    messages.success(request, 'Se eliminó 1 unidad del producto del carrito.')
+    return redirect('shopping_cart')
+
+#Vista eliminar todo el producto
+def remove_all(request, product_id):
+    cart_item = get_object_or_404(CartItem, cart__user=request.user, product__id=product_id)
+    cart_item.delete()
+
+    messages.success(request, 'Se eliminó todo el producto del carrito.')
+    return redirect('shopping_cart')
+
+#Vista agregar 1 producto
+def add_one(request, product_id):
+    cart_item = get_object_or_404(CartItem, cart__user=request.user, product__id=product_id)
+    
+    cart_item.quantity += 1
+    cart_item.save()
+
+    messages.success(request, 'Se agregó 1 unidad del producto al carrito.')
+    return redirect('shopping_cart')
