@@ -2,7 +2,7 @@
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Task, CustomUser, Product
+from .models import Task, CustomUser, Product, Service
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -36,3 +36,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['name', 'description', 'price']  # Ajusta los campos según tu modelo
+
+    # Puedes agregar más personalización del formulario aquí si es necesario

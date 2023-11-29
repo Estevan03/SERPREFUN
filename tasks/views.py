@@ -11,7 +11,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 from django.contrib import messages
 from .cart import Cart
 from django.http import JsonResponse
-
+from .forms import ServiceForm
 
 
 # Vista para el registro
@@ -370,3 +370,47 @@ def add_one(request, product_id):
 
     messages.success(request, 'Se agregó 1 unidad del producto al carrito.')
     return redirect('shopping_cart')
+
+
+#Vista servicios
+@login_required
+def service_list(request):
+    services = Service.objects.all()
+    return render(request, 'service_list.html', {'services': services})
+
+@login_required
+def add_service_to_cart(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+
+    # Crear o actualizar el CarritoItem para el servicio
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, service=service)
+
+    # Incrementar la cantidad en 1
+    cart_item.quantity += 1
+    cart_item.save()
+
+    return JsonResponse({'success': True, 'message': 'Servicio agregado al carrito exitosamente.'})
+
+@login_required
+def add_service(request):
+    if request.method == 'POST':
+        form = ServiceForm(request.POST)
+        if form.is_valid():
+            # Guardar el servicio en la base de datos
+            service = form.save(commit=False)
+            service.created_by = request.user
+            service.save()
+
+            return redirect('employee_service_list')  # Ajusta el nombre de la vista según tus URL
+    else:
+        form = ServiceForm()
+    return render(request, 'add_service.html', {'form': form})
+
+def employee_service_list(request):
+    # Obtener todos los servicios
+    services = Service.objects.all()
+
+    # Puedes agregar más lógica según tus necesidades
+    
+    return render(request, 'employee_service_list.html', {'services': services})

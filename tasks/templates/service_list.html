@@ -1,0 +1,39 @@
+<!-- service_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Servicios Disponibles</h1>
+  <ul>
+    {% for service in services %}
+      <li>
+        {{ service.name }} - Precio: {{ service.price }}
+        <a href="#" onclick="addServiceToCart({{ service.id }})">Agregar al carrito</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <div id="confirmationMessage" style="display: none;">
+    <!-- Mensaje de confirmación -->
+  </div>
+
+  <script>
+    function addServiceToCart(serviceId) {
+      $.ajax({
+        url: '{% url "add_service_to_cart" 0 %}'.replace('0', serviceId),
+        method: 'GET',
+        success: function(data) {
+          // Muestra el mensaje de confirmación solo si la solicitud tiene éxito
+          if (data.success) {
+            $('#confirmationMessage').text(data.message);
+            $('#confirmationMessage').show();
+          }
+        },
+        error: function(error) {
+          console.error('Error al agregar al carrito:', error);
+        }
+      });
+
+      return false;  // Esto evita que el enlace siga el href
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!-- En tu archivo templates/employee_service_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Lista de Servicios para Empleados</h1>
+  
+  {% if services %}
+    <ul>
+      {% for service in services %}
+        <li>{{ service.name }}</li>
+        <!-- Puedes mostrar más detalles del servicio según tus necesidades -->
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay servicios disponibles.</p>
+  {% endif %}
+{% endblock %}
