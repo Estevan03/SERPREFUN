@@ -215,7 +215,6 @@ def editar_usuario(request, user_id):
 @login_required
 def manage_user_permissions(request, user_id):
     user = get_object_or_404(get_user_model(), pk=user_id)
-
     if request.method == 'POST':
         form = UserPermissionForm(request.POST, instance=user)
         if form.is_valid():

@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<<<<<<< HEAD
 <style>
   .container {
     
@@ -56,9 +55,6 @@
   }
 </style>
 <h1>Inicio</h1>
-=======
-<h1>Signin</h1>
->>>>>>> 061f3824cb25164aeb21ab419b1a871eb10eb5c0
 
 {% if messages %}
   <div class="alert alert-danger">
@@ -70,7 +66,6 @@
   </div>
 {% endif %}
 
-<<<<<<< HEAD
 <form action="{% url 'signin' %}" method="POST" style="background-color: #e0f2f1; padding: 20px; border-radius: 10px;">
   {% csrf_token %}
   <div style="margin-bottom: 30px; border-radius: 10px">
@@ -87,16 +82,4 @@
 
 <p><a href="{% url 'password_reset' %}" style="color: #008080;">¿Olvidó su contraseña?</a></p>
 <p><a href="{% url 'signup' %}" style="color: #008080;">Registrarse</a></p>
-=======
-<form action="{% url 'signin' %}" method="POST">
-  {% csrf_token %}
-  {{ form.username.label_tag }} {{ form.username }}
-  {{ form.password.label_tag }} {{ form.password }}
-  {{ form.role.label_tag }} {{ form.role }}
-  <button>Signin</button>
-</form>
-
-<p><a href="{% url 'password_reset' %}">¿Olvidó su contraseña?</a></p>
-<p><a href="{% url 'signup' %}">Registrarse</a></p>
->>>>>>> 061f3824cb25164aeb21ab419b1a871eb10eb5c0
 {% endblock %}

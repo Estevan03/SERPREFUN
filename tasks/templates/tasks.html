@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'base.html' %} 
 {% block content %}
 
@@ -34,24 +33,6 @@
         {{task.datecompleted|date:'M j Y:i'}}
       </a>
     </li>
-=======
-{% extends 'base.html' %} {% block content %}
-
-<h1>tasks</h1>
-
-<ul>
-  {% for task in tasks %}
-  <li>
-    <a href="{% url 'task_detail' task.id %}">
-      {% if task.important %}
-      <strong>{{task.title}}</strong>
-      {% else %} {{task.id}} {{task.title}} {% endif %}
-      <p>{{task.description}}</p>
-
-      {{task.datecompleted|date:'M j Y:i'}}
-    </a>
-  </li>
->>>>>>> 061f3824cb25164aeb21ab419b1a871eb10eb5c0
   {% endfor %}
 </ul>
 
