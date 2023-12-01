@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Confirmar Eliminación</h1>
+  <p>¿Estás seguro de que deseas eliminar el servicio "{{ service.name }}"?</p>
+  
+  <form method="post" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+  </form>
+  
+  <a href="{% url 'employee_service_list' %}">Cancelar</a>
+{% endblock %}

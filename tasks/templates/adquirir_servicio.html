@@ -1,0 +1,14 @@
+<!-- adquirir_servicio.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Adquirir Servicio</h1>
+  <p>Servicio: {{ servicio.name }} - Precio: {{ servicio.price }} - Descripcion: {{ servicio.description }}</p>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Enviar solicitud">
+  </form>
+{% endblock %}

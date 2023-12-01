@@ -1,0 +1,18 @@
+<!-- En tasks/templates/ver_pedido.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Detalles del Pedido</h1>
+  <p>Servicio: {{ pedido.servicio.name }}</p>
+  <p>Solicitado por: {{ pedido.nombre }}</p>
+  <!-- Otros detalles del pedido aquí -->
+
+  <form method="post" action="">
+    {% csrf_token %}
+    <select name="accion">
+      <option value="aceptar">Aceptar</option>
+      <option value="denegar">Denegar</option>
+    </select>
+    <input type="submit" value="Aplicar Acción">
+  </form>
+{% endblock %}

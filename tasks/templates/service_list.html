@@ -1,4 +1,3 @@
-<!-- service_list.html -->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -7,33 +6,44 @@
     {% for service in services %}
       <li>
         {{ service.name }} - Precio: {{ service.price }}
-        <a href="#" onclick="addServiceToCart({{ service.id }})">Agregar al carrito</a>
+        <button class="open-modal-btn" data-service-id="{{ service.id }}">Adquirir</button>
       </li>
     {% endfor %}
   </ul>
 
-  <div id="confirmationMessage" style="display: none;">
-    <!-- Mensaje de confirmación -->
-  </div>
+  <!-- Modales -->
+  {% for service in services %}
+    <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="serviceModalLabel">Adquirir Servicio</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Contenedor para cargar el formulario con JavaScript -->
+            <div id="serviceFormContainer{{ service.id }}"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
 
   <script>
-    function addServiceToCart(serviceId) {
-      $.ajax({
-        url: '{% url "add_service_to_cart" 0 %}'.replace('0', serviceId),
-        method: 'GET',
-        success: function(data) {
-          // Muestra el mensaje de confirmación solo si la solicitud tiene éxito
-          if (data.success) {
-            $('#confirmationMessage').text(data.message);
-            $('#confirmationMessage').show();
-          }
-        },
-        error: function(error) {
-          console.error('Error al agregar al carrito:', error);
-        }
+    $(document).ready(function() {
+      // Manejar el clic en el botón "Adquirir"
+      $('.open-modal-btn').click(function() {
+        var serviceId = $(this).data('service-id');
+        // Cargar el formulario dentro del contenedor del modal
+        $('#serviceFormContainer' + serviceId).load("{% url 'service_request' 0 %}".replace('0', serviceId));
+        // Mostrar el modal
+        $('#serviceModal' + serviceId).modal('show');
       });
-
-      return false;  // Esto evita que el enlace siga el href
-    }
+    });
   </script>
 {% endblock %}

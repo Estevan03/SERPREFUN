@@ -2,17 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
-from .models import Product
 from django.contrib.auth import login, logout, authenticate, get_user_model
-from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm, UserPermissionForm, ProductForm
+from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm, UserPermissionForm, ProductForm, PedidoForm, ServiceRequestForm
 from django.contrib.auth.models import User
-from tasks.forms import CustomUserForm
+from tasks.forms import CustomUserForm,ServiceRequestForm
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib import messages
 from .cart import Cart
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from .forms import ServiceForm
-
+from django.views import View
 
 # Vista para el registro
 def signup(request):
@@ -325,20 +324,6 @@ def add_to_cart(request, product_id):
     messages.success(request, f"{product.name} se ha añadido al carrito.")
     return redirect('product_list')
 
-#Vista carrito
-@login_required
-def shopping_cart(request):
-    # Obtener el carrito para el usuario actual
-    cart = ShoppingCart.objects.get(user=request.user)
-
-    # Obtener los elementos del carrito
-    cart_items = cart.cartitem_set.all()
-
-    # Calcular el valor total para cada artículo
-    for item in cart_items:
-        item.total = item.quantity * item.product.price
-
-    return render(request, 'shopping_cart.html', {'cart_items': cart_items})
 
 #Vista eliminar 1 producto
 def remove_one(request, product_id):
@@ -379,20 +364,6 @@ def service_list(request):
     return render(request, 'service_list.html', {'services': services})
 
 @login_required
-def add_service_to_cart(request, service_id):
-    service = get_object_or_404(Service, pk=service_id)
-    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
-
-    # Crear o actualizar el CarritoItem para el servicio
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, service=service)
-
-    # Incrementar la cantidad en 1
-    cart_item.quantity += 1
-    cart_item.save()
-
-    return JsonResponse({'success': True, 'message': 'Servicio agregado al carrito exitosamente.'})
-
-@login_required
 def add_service(request):
     if request.method == 'POST':
         form = ServiceForm(request.POST)
@@ -414,3 +385,153 @@ def employee_service_list(request):
     # Puedes agregar más lógica según tus necesidades
     
     return render(request, 'employee_service_list.html', {'services': services})
+
+def service_detail(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    return render(request, 'service_detail.html', {'service': service})
+
+def edit_service(request, service_id):
+    # Obtener el servicio existente desde la base de datos
+    service = get_object_or_404(Service, id=service_id)
+
+    if request.method == 'POST':
+        # Si se envió un formulario, procesar los datos del formulario
+        form = ServiceForm(request.POST, instance=service)
+        if form.is_valid():
+            # Guardar los cambios en el servicio
+            form.save()
+            return redirect('employee_service_list')
+    else:
+        # Si es una solicitud GET, mostrar el formulario con los datos existentes del servicio
+        form = ServiceForm(instance=service)
+
+    return render(request, 'edit_service.html', {'form': form, 'service': service})
+
+
+def delete_service(request, service_id):
+    # Obtener el servicio existente desde la base de datos
+    service = get_object_or_404(Service, id=service_id)
+
+    if request.method == 'POST':
+        # Si se envió una solicitud POST, eliminar el servicio
+        service.delete()
+        return redirect('employee_service_list')
+
+    return render(request, 'delete_service.html', {'service': service})
+
+@login_required
+def add_service_to_cart(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+
+    # Crear o actualizar el CartItem para el servicio
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, service=service)
+
+    # Incrementar la cantidad en 1
+    cart_item.quantity += 1
+    cart_item.save()
+
+    return JsonResponse({'success': True, 'message': 'Servicio agregado al carrito exitosamente.'})
+
+#Vista carrito
+@login_required
+def shopping_cart(request):
+    # Obtener el carrito para el usuario actual
+    cart = ShoppingCart.objects.get(user=request.user)
+
+    # Obtener los elementos del carrito
+    cart_items = cart.cartitem_set.all()
+
+    # Calcular el valor total para cada artículo
+    for item in cart_items:
+        item.total = item.quantity * item.product.price
+
+    return render(request, 'shopping_cart.html', {'cart_items': cart_items})
+
+
+def adquirir_servicio(request, servicio_id):
+    servicio = get_object_or_404(Service, pk=servicio_id)
+
+    if request.method == 'POST':
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.servicio = servicio
+            pedido.save()
+            return HttpResponseRedirect('/pedidos/')  # Redirige a la lista de pedidos
+    else:
+        form = PedidoForm()
+
+    return render(request, 'adquirir_servicio.html', {'form': form, 'servicio': servicio})
+
+def lista_pedidos(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'pedidos.html', {'pedidos': pedidos})
+
+def service_request(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+
+    if request.method == 'POST':
+        form = ServiceRequestForm(request.POST)
+        if form.is_valid():
+            # Guardar la solicitud en la base de datos o realizar acciones necesarias
+            service_request = form.save(commit=False)
+            service_request.service = service
+            service_request.save()
+            return redirect('service_list')  # Redirigir a la lista de servicios después de enviar el formulario
+    else:
+        form = ServiceRequestForm()
+
+    return render(request, 'service_request_form.html', {'form': form, 'service': service})
+
+def submit_service_request(request, service_id):
+    if request.method == 'POST':
+        form = ServiceRequestForm(request.POST)
+        if form.is_valid():
+            service_request = form.save(commit=False)
+            service_request.service_id = service_id
+            service_request.save()
+            print("Formulario procesado correctamente y guardado en la base de datos.")
+            return redirect('service_list')  # O la URL que desees
+    else:
+        form = ServiceRequestForm()
+
+    return render(request, 'service_request_form.html', {'form': form, 'service_id': service_id})
+
+    
+class PedidoListView(View):
+    pedido_list = 'pedido_list.html'
+
+    def get(self, request):
+        pedidos = Pedido.objects.all()
+        return render(request, self.pedido_list, {'pedidos': pedidos})
+    
+class VerPedidoView(View):
+    ver_pedido = 'ver_pedido.html'
+
+    def get(self, request, pedido_id):
+        pedido = Pedido.objects.get(id=pedido_id)
+        return render(request, self.template_name, {'pedido': pedido})
+
+    def post(self, request, pedido_id):
+        pedido = Pedido.objects.get(id=pedido_id)
+        # Procesa la acción del empleado (aceptar, denegar, etc.)
+        # Actualiza el estado del pedido según la acción
+        pedido.estado = request.POST.get('accion')
+        pedido.save()
+        return redirect('pedido_list')
+    
+class ServiceRequestView(View):
+    service_request_form = 'service_request_form.html'
+
+    def get(self, request, service_id):
+        form = ServiceRequestForm()
+        return render(request, self.service_request_form, {'form': form, 'service_id': service_id})
+
+    def post(self, request, service_id):
+        form = ServiceRequestForm(request.POST)
+        if form.is_valid():
+            # Guardar la solicitud en la base de datos o realizar acciones necesarias
+            form.save()
+            return redirect('service_list')  # Redirigir a la lista de servicios después de enviar el formulario
+        return render(request, self.service_request_form, {'form': form, 'service_id': service_id})

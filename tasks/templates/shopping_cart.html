@@ -3,34 +3,40 @@
 
 {% block content %}
   <h1>Carrito de Compras</h1>
+  <ul>
+    {% for item in cart_items %}
+      <li>
+        {% if item.product %}
+          {{ item.product.name }} - Precio: {{ item.product.price }} - Cantidad: {{ item.quantity }}
+        {% elif item.service %}
+          {{ item.service.name }} - Precio: {{ item.service.price }} - Cantidad: {{ item.quantity }}
+        {% endif %}
+        <a href="{% url 'remove_one' item.product.id %}" onclick="removeOne('{{ item.id }}')">Eliminar 1</a>
+        <a href="{% url 'remove_all' item.product.id %}" onclick="removeAll('{{ item.id }}')">Eliminar Todo</a>
+        <a href="{% url 'add_one' item.product.id %}" onclick="addOne('{{ item.id }}')">Agregar 1</a>
+      </li>
+    {% endfor %}
+  </ul>
 
-  {% if cart_items %}
-    <table>
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Cantidad</th>
-          <th>Precio</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in cart_items %}
-          <tr>
-            <td>{{ item.product.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>${{ item.product.price }}</td>
-            <td>${{ item.total }}</td>
-            <td>
-              <a href="{% url 'remove_one' item.product.id %}">Eliminar 1</a>
-              <a href="{% url 'remove_all' item.product.id %}">Eliminar todo</a>
-              <a href="{% url 'add_one' item.product.id %}">Agregar</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>El carrito de compras está vacío.</p>
-  {% endif %}
+  <script>
+    function removeOne(item_id) {
+      $.ajax({
+        url: '{% url "remove_one" 0 %}'.replace('0', item_id),
+        method: 'GET',
+        success: function(data) {
+          // Actualiza la interfaz o realiza otras acciones después de eliminar 1
+          console.log('Producto o servicio eliminado (1) del carrito:', data);
+        },
+        error: function(error) {
+          console.error('Error al eliminar 1 del carrito:', error);
+        }
+      });
+
+      return false;  // Esto evita que el enlace siga el href
+    }
+
+    // Implementa funciones similares para removeAll y addOne
+    // ...
+
+  </script>
 {% endblock %}

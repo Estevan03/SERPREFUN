@@ -1,0 +1,24 @@
+<!-- employee_service_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Lista de Servicios para Empleados</h1>
+  
+  {% if services %}
+    <ul>
+      {% for service in services %}
+        <li>
+          {{ service.name }}
+          <a href="{% url 'service_detail' service.id %}">Ver detalles</a>
+          <a href="{% url 'edit_service' service.id %}">Editar</a>
+          <a href="{% url 'delete_service' service.id %}">Eliminar</a>
+        </li>
+        <!-- Puedes mostrar más detalles del servicio según tus necesidades -->
+      {% endfor %}
+    </ul>
+    <a href="{% url 'add_service' %}">Agregar Nuevo Servicio</a>
+  {% else %}
+    <p>No hay servicios disponibles.</p>
+    <a href="{% url 'add_service' %}">Agregar Nuevo Servicio</a>
+  {% endif %}
+{% endblock %}

@@ -49,5 +49,14 @@ urlpatterns = [
     path('add-service-to-cart/<int:service_id>/', views.add_service_to_cart, name='add_service_to_cart'),
     path('employee/add-service/', views.add_service, name='add_service'),
     path('employee/service-list/', views.employee_service_list, name='employee_service_list'),
-
+    path('services/<int:service_id>/', views.service_detail, name='service_detail'),
+    path('edit-service/<int:service_id>/', views.edit_service, name='edit_service'),
+    path('delete-service/<int:service_id>/', views.delete_service, name='delete_service'),
+    path('services/add_to_cart/<int:service_id>/', views.add_service_to_cart, name='add_service_to_cart'),
+    path('adquirir-servicio/<int:servicio_id>/', views.adquirir_servicio, name='adquirir_servicio'),
+    path('request-service/<int:service_id>/', views.service_request, name='service_request'),
+    path('submit-service-request/<int:service_id>/', views.submit_service_request, name='submit_service_request'),
+    path('request-service/<int:service_id>/', views.ServiceRequestView.as_view(), name='request_service'),
+    path('pedidos/', views.PedidoListView.as_view(), name='pedido_list'),
+    path('pedido/<int:pedido_id>/', views.VerPedidoView.as_view(), name='ver_pedido'),
 ]

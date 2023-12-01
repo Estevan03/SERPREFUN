@@ -38,15 +38,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
-# models.py
-class CartItem(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-    cart = models.ForeignKey('ShoppingCart', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.product.name} - Cantidad: {self.quantity}"
-
+    
 class ShoppingCart(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     products = models.ManyToManyField('Product', through='CartItem')
@@ -63,3 +55,44 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+class CartItem(models.Model):
+    cart = models.ForeignKey('ShoppingCart', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, null=True, blank=True, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, null=True, blank=True, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name if self.product else self.service.name}"
+
+    @property
+    def total(self):
+        # Lógica para calcular el total
+        return self.quantity * self.product.price if self.product else self.quantity * self.service.price
+
+    @total.setter
+    def total(self, value):
+        # No hacemos nada aquí, ya que el total se calcula automáticamente
+        pass
+    
+class Pedido(models.Model):
+    servicio = models.ForeignKey(Service, on_delete=models.CASCADE)
+    nombre_completo = models.CharField(max_length=255)
+    tipo_documento = models.CharField(max_length=50)
+    numero_documento = models.CharField(max_length=50)
+    correo_electronico = models.EmailField()
+    numero_celular = models.CharField(max_length=20)
+    direccion = models.TextField()
+    
+    
+class ServiceRequest(models.Model):
+    full_name = models.CharField(max_length=255)
+    document_type = models.CharField(max_length=50)
+    document_number = models.CharField(max_length=20)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=20)
+    address = models.TextField()
+    service_id = models.IntegerField()  # Enlazar con el servicio solicitado
+
+    def __str__(self):
+        return f"Solicitud de servicio para {self.full_name}"
