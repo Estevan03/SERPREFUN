@@ -1,3 +1,4 @@
+<!-- service_list.html -->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -6,14 +7,16 @@
     {% for service in services %}
       <li>
         {{ service.name }} - Precio: {{ service.price }}
-        <button class="open-modal-btn" data-service-id="{{ service.id }}">Adquirir</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#serviceModal{{ service.id }}">
+          Adquirir
+        </button>
       </li>
     {% endfor %}
   </ul>
 
-  <!-- Modales -->
+  <!-- Modal -->
   {% for service in services %}
-    <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
+  <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -23,8 +26,12 @@
             </button>
           </div>
           <div class="modal-body">
-            <!-- Contenedor para cargar el formulario con JavaScript -->
-            <div id="serviceFormContainer{{ service.id }}"></div>
+            <!-- Aquí renderiza el formulario -->
+            <form method="post" action="{% url 'service_request' service.id %}">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-primary">Enviar Pedido</button>
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -34,16 +41,4 @@
     </div>
   {% endfor %}
 
-  <script>
-    $(document).ready(function() {
-      // Manejar el clic en el botón "Adquirir"
-      $('.open-modal-btn').click(function() {
-        var serviceId = $(this).data('service-id');
-        // Cargar el formulario dentro del contenedor del modal
-        $('#serviceFormContainer' + serviceId).load("{% url 'service_request' 0 %}".replace('0', serviceId));
-        // Mostrar el modal
-        $('#serviceModal' + serviceId).modal('show');
-      });
-    });
-  </script>
 {% endblock %}

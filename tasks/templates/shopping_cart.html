@@ -15,6 +15,7 @@
         <a href="{% url 'remove_all' item.product.id %}" onclick="removeAll('{{ item.id }}')">Eliminar Todo</a>
         <a href="{% url 'add_one' item.product.id %}" onclick="addOne('{{ item.id }}')">Agregar 1</a>
       </li>
+      <a href="{% url 'buy_products' %}">Comprar Productos</a>
     {% endfor %}
   </ul>
 

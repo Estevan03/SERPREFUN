@@ -3,7 +3,7 @@
 
 {% block content %}
   <h1>Solicitud de Servicio</h1>
-  <form method="post" action="{% url 'submit_service_request' service_id=service_id %}">
+  <form method="post" action="{% url 'service_request' service_id=service_id %}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Enviar Pedido</button>

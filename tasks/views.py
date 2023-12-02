@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import *
 from django.contrib.auth import login, logout, authenticate, get_user_model
-from .forms import TaskForm, CustomUserCreationForm, CustomAuthenticationForm, UserPermissionForm, ProductForm, PedidoForm, ServiceRequestForm
+from .forms import *
 from django.contrib.auth.models import User
 from tasks.forms import CustomUserForm,ServiceRequestForm
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
@@ -154,15 +154,14 @@ def delete_task(request, task_id):
         return redirect('tasks')
 
 #Vista para listar los usuarios en una plantilla del admin
-@user_passes_test(lambda user: user.is_superuser and user.role == 'admin')
 @login_required
+@user_passes_test(lambda user: (user.is_superuser or user.role == 'empleado'))
 def user_list(request):
     users = CustomUser.objects.all()
 
-    # Verifica si el usuario actual tiene permisos de administrador
-    if not request.user.is_superuser:
-        messages.error(request, 'No tienes permisos para acceder a la lista de usuarios. Solicita permisos a otro administrador.')
-        # Establece el mensaje de error antes de redirigir
+    # Verifica si el usuario actual tiene permisos de administrador o es empleado
+    if not (request.user.is_superuser or request.user.role == 'empleado'):
+        messages.error(request, 'No tienes permisos para acceder a la lista de usuarios.')
         return redirect('home')  # Ajusta la redirección según tus necesidades
 
     users_with_permissions = []
@@ -175,8 +174,6 @@ def user_list(request):
         users_with_permissions.append({'user': user, 'form': permission_form})
 
     return render(request, 'user_list.html', {'users_with_permissions': users_with_permissions})
-
-
 
 #Vista para activar y desactivar usuarios, ver perfil y editar usuarios
 def activar_usuario(request, user_id):
@@ -468,21 +465,30 @@ def lista_pedidos(request):
     pedidos = Pedido.objects.all()
     return render(request, 'pedidos.html', {'pedidos': pedidos})
 
+@login_required
 def service_request(request, service_id):
     service = get_object_or_404(Service, id=service_id)
 
     if request.method == 'POST':
         form = ServiceRequestForm(request.POST)
         if form.is_valid():
-            # Guardar la solicitud en la base de datos o realizar acciones necesarias
+            # Asociar la solicitud con el usuario cliente y el servicio
             service_request = form.save(commit=False)
+            service_request.user = request.user
             service_request.service = service
             service_request.save()
-            return redirect('service_list')  # Redirigir a la lista de servicios después de enviar el formulario
+            return redirect('service_list')
+
     else:
         form = ServiceRequestForm()
 
-    return render(request, 'service_request_form.html', {'form': form, 'service': service})
+    context = {
+        'form': form,
+        'service': service,
+        'service_id': service_id,  # Agrega service_id al contexto
+    }
+
+    return render(request, 'service_request_form.html', context)
 
 def submit_service_request(request, service_id):
     if request.method == 'POST':
@@ -499,12 +505,11 @@ def submit_service_request(request, service_id):
     return render(request, 'service_request_form.html', {'form': form, 'service_id': service_id})
 
     
-class PedidoListView(View):
-    pedido_list = 'pedido_list.html'
-
-    def get(self, request):
-        pedidos = Pedido.objects.all()
-        return render(request, self.pedido_list, {'pedidos': pedidos})
+@login_required
+def pedido_list(request):
+    # Filtrar las solicitudes de servicio por el usuario actual (empleado)
+    pedidos = ServiceRequest.objects.filter(service__created_by=request.user)
+    return render(request, 'pedido_list.html', {'pedidos': pedidos})
     
 class VerPedidoView(View):
     ver_pedido = 'ver_pedido.html'
@@ -535,3 +540,43 @@ class ServiceRequestView(View):
             form.save()
             return redirect('service_list')  # Redirigir a la lista de servicios después de enviar el formulario
         return render(request, self.service_request_form, {'form': form, 'service_id': service_id})
+    
+
+def buy_products(request):
+    if request.method == 'POST':
+        form = ShoppingCartForm(request.POST)
+        if form.is_valid():
+            direccion_envio = form.cleaned_data['direccion_envio']
+
+            # Crear un carrito asociado al usuario cliente
+            shopping_cart = ShoppingCart.objects.create(
+                user=request.user,
+                direccion_envio=direccion_envio
+            )
+
+            # Crear un pedido asociado al carrito
+            pedido = Pedido.objects.create(
+                servicio=None,  # Ajusta esto según tus necesidades
+                nombre_completo=request.user.get_full_name(),
+                tipo_documento='DNI',  # Ajusta esto según tus necesidades
+                numero_documento='12345678',  # Ajusta esto según tus necesidades
+                correo_electronico=request.user.email,
+                numero_celular='123456789',
+                direccion=direccion_envio
+            )
+
+            # Asociar cada producto en el carrito al pedido
+            for cart_item in shopping_cart.products.all():
+                pedido.servicio.add(cart_item.service)
+                # Ajusta la lógica según tus necesidades
+
+            # Eliminar el carrito y sus elementos asociados
+             # Limpiar el carrito del usuario después de la compra
+            shopping_cart.products.clear()
+
+            messages.success(request, 'Compra realizada con éxito. ¡Gracias por tu compra!')
+            return redirect('employee_orders')  # Ajusta la redirección según tus necesidades
+    else:
+        form = ShoppingCartForm()
+
+    return render(request, 'buy_products.html', {'form': form})

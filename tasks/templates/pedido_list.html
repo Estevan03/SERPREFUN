@@ -1,13 +1,14 @@
-<!-- En tasks/templates/pedido_list.html -->
+<!-- pedido_list.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Lista de Pedidos</h1>
+  <h1>Listado de Pedidos</h1>
   <ul>
     {% for pedido in pedidos %}
       <li>
-        {{ pedido.servicio.name }} - Solicitado por: {{ pedido.nombre }} - Estado: {{ pedido.estado }}
-        <a href="{% url 'ver_pedido' pedido.id %}">Ver Detalles</a>
+        Cliente: {{ pedido.user.username }}<br>
+        Servicio: {{ pedido.service.name }}<br>
+        <!-- Agrega más detalles según sea necesario -->
       </li>
     {% endfor %}
   </ul>

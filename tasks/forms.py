@@ -52,4 +52,9 @@ class PedidoForm(forms.ModelForm):
 class ServiceRequestForm(forms.ModelForm):
     class Meta:
         model = ServiceRequest
-        fields = ['full_name', 'document_type', 'document_number', 'email', 'phone_number', 'address']
+        fields = ['full_name', 'document_type', 'document_number', 'email', 'phone_number', 'address', 'service']
+        
+class ShoppingCartForm(forms.Form):
+    # Puedes agregar más campos según tus necesidades
+    direccion_envio = forms.CharField(label='Dirección de Envío', max_length=255)
+    comentario = forms.CharField(label='Comentario', widget=forms.Textarea, required=False)

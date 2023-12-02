@@ -1,0 +1,11 @@
+<!-- buy_products.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Comprar Productos</h1>
+  <form method="post" action="{% url 'buy_products' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Comprar Productos</button>
+  </form>
+{% endblock %}

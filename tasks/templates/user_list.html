@@ -89,7 +89,7 @@
                 {{ user_with_permissions.user.username }} - Rol: {{ user_with_permissions.user.get_role_display }}
                 <a href="{% url 'editar_usuario' user_with_permissions.user.id %}">Editar</a>
 
-                {% if user_with_permissions.user.role == 'admin' %}
+                {% if user_with_permissions.user.role == 'admin' or user_with_permissions.user.role == 'empleado' %}
                     <form action="{% url 'manage_user_permissions' user_with_permissions.user.id %}" method="post">
                         {% csrf_token %}
                         {{ user_with_permissions.form.as_p }}

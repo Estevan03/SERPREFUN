@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.core.validators import validate_email
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 # Create your models here.
 
@@ -40,8 +41,9 @@ class Product(models.Model):
     
     
 class ShoppingCart(models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, unique=True)
     products = models.ManyToManyField('Product', through='CartItem')
+    direccion_envio = models.CharField(max_length=255, default='')
 
     def __str__(self):
         return f"Carrito de {self.user.username}"
@@ -74,7 +76,7 @@ class CartItem(models.Model):
     def total(self, value):
         # No hacemos nada aquí, ya que el total se calcula automáticamente
         pass
-    
+
 class Pedido(models.Model):
     servicio = models.ForeignKey(Service, on_delete=models.CASCADE)
     nombre_completo = models.CharField(max_length=255)
@@ -83,16 +85,20 @@ class Pedido(models.Model):
     correo_electronico = models.EmailField()
     numero_celular = models.CharField(max_length=20)
     direccion = models.TextField()
-    
-    
+    fecha_creacion = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Pedido para {self.nombre_completo}"
+
 class ServiceRequest(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='service_requests', default=1)  # Ajusta el valor predeterminado según tus necesidades
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
     document_type = models.CharField(max_length=50)
     document_number = models.CharField(max_length=20)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20)
     address = models.TextField()
-    service_id = models.IntegerField()  # Enlazar con el servicio solicitado
 
     def __str__(self):
         return f"Solicitud de servicio para {self.full_name}"
