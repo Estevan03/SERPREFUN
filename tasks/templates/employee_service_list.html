@@ -3,7 +3,57 @@
 
 {% block content %}
   <h1>Lista de Servicios para Empleados</h1>
+  <style>
+    
   
+    h1 {
+      color: black; /* Color del título principal */
+      text-align: center; /* Centra el texto horizontalmente */
+    }
+  
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+  
+    li {
+      
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    a {
+      color: black; /* Color del enlace */
+      text-decoration: none;
+      padding: 8px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease-in-out;
+    }
+  
+    a:hover {
+      background-color: #d2f1c2; /* Cambia el color al pasar el mouse sobre el enlace */
+    }
+  
+    .add-service-link {
+      display: block;
+      margin-top: 20px;
+      color: #fff; /* Color del texto del enlace de agregar nuevo servicio */
+      background-color: #3498db; /* Color de fondo del enlace de agregar nuevo servicio */
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background-color 0.3s ease-in-out;
+    }
+  
+    .add-service-link:hover {
+      background-color: #2980b9; /* Cambia el color al pasar el mouse sobre el enlace de agregar nuevo servicio */
+    }
+  </style>
   {% if services %}
     <ul>
       {% for service in services %}

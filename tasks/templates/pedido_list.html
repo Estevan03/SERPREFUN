@@ -3,6 +3,34 @@
 
 {% block content %}
   <h1>Listado de Pedidos</h1>
+  <style>
+    
+    h1 {
+      color: black; /* Color del título principal */
+      text-align: center; /* Centra el texto horizontalmente */
+    }
+  
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+  
+    li {
+      
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave alrededor de cada recuadro */
+    }
+  
+    li:not(:last-child) {
+      /* Aplica margen inferior solo a elementos que no sean el último para separarlos */
+      margin-bottom: 20px;
+    }
+  
+    /* Agrega más estilos según sea necesario */
+  </style>
+  
   <ul>
     {% for pedido in pedidos %}
       <li>

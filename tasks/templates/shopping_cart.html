@@ -3,6 +3,58 @@
 
 {% block content %}
   <h1>Carrito de Compras</h1>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5; /* Color de fondo */
+      color: #333; /* Color de texto principal */
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #3498db; /* Color de fondo del encabezado */
+      color: #fff; /* Color de texto del encabezado */
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Agrega estilos específicos para el carrito de compras */
+    h1 {
+      color: black; /* Color del título principal */
+      text-align: center; /* Centra el texto horizontalmente */
+      padding: 20px 0; /* Añade espacio alrededor del título */
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+
+    a {
+      color: #27ae60; /* Color del enlace */
+      text-decoration: none;
+      margin-left: 10px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    a:hover {
+      background-color: #52be80; /* Cambia el color al pasar el mouse sobre el botón */
+    }
+    .actions {
+      margin-top: 10px;
+    }
+    a:hover {
+      background-color: #52be80; /* Cambia el color al pasar el mouse sobre el enlace */
+    }
+
+    /* Puedes agregar más estilos según sea necesario */
+
+  </style>
   <ul>
     {% for item in cart_items %}
       <li>

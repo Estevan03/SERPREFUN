@@ -2,7 +2,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
   <h1>Servicios Disponibles</h1>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5; /* Color de fondo */
+      color: #333; /* Color de texto principal */
+      margin: 0;
+      padding: 0;
+    }
+  
+    h1 {
+      color: black; /* Color del título principal */
+      text-align: center; /* Centra el texto horizontalmente */
+      padding: 20px 0; /* Añade espacio alrededor del título */
+    }
+  
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+  
+    li {
+      
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    button {
+      background-color: #3498db; /* Color de fondo del botón */
+      color: #fff; /* Color del texto del botón */
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+  
+    button:hover {
+      background-color: #2980b9; /* Cambia el color al pasar el mouse sobre el botón */
+    }
+  
+    /* Puedes ajustar los estilos según tus preferencias */
+  </style>
   <ul>
     {% for service in services %}
       <li>
@@ -13,6 +60,7 @@
       </li>
     {% endfor %}
   </ul>
+  
 
   <!-- Modal -->
   {% for service in services %}
@@ -40,5 +88,7 @@
       </div>
     </div>
   {% endfor %}
-
+  
 {% endblock %}
+
+

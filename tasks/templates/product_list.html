@@ -1,16 +1,67 @@
 <!-- product_list.html -->
 {% extends 'base.html' %}
 
+
 {% block content %}
   <h1>Productos</h1>
-  <ul>
-    {% for product in productos %}  {# Cambié 'products' a 'productos' #}
-      <li>
-        {{ product.name }} - Precio: {{ product.price }}
-        <a href="{% url 'edit_product' product.id %}">Editar</a>
-        <a href="{% url 'delete_product' product.id %}">Eliminar</a>
-      </li>
+  <style>
+    /* Agrega este código CSS en tu archivo de estilos o en línea según tus necesidades */
+  
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .product-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    width: 250px;
+  }
+  
+  .product-details {
+    margin-top: 10px;
+  }
+  
+  .price {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .product-actions a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .add-product-link {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+  }
+  
+  </style>
+  <div class="product-list">
+    {% for product in productos %}
+      <div class="product-item">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+        <div class="product-details">
+          <h2>{{ product.name }}</h2>
+          <p class="price">Precio: 20.0 {{ product.price }}</p>
+          <div class="product-actions">
+            <a href="{% url 'edit_product' product.id %}">Editar</a>
+            <a href="{% url 'delete_product' product.id %}">Eliminar</a>
+          </div>
+        </div>
+      </div>
     {% endfor %}
-  </ul>
-  <a href="{% url 'add_product' %}">Agregar Nuevo Producto</a>
+  </div>
+  <a class="add-product-link" href="{% url 'add_product' %}">Agregar Nuevo Producto</a>
 {% endblock %}

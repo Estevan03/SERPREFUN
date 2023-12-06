@@ -1,13 +1,49 @@
-<!-- cliente_products.html -->
 {% extends 'base.html' %}
 
 {% block content %}
+  <style>
+    a {
+      color: #27ae60; /* Color del enlace */
+      text-decoration: none;
+      margin-left: 10px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      
+      transition: background-color 0.3s ease-in-out;
+      display: inline-block;
+      position: relative;
+    }
+
+    
+
+    .add-to-cart-icon::before {
+      content: '\1F6D2'; /* Código unicode para el icono del carrito de compras */
+      font-size: 20px;
+      margin-right: 5px;
+    }
+    h1 {
+      color: black; /* Color del título principal */
+      text-align: center; /* Centra el texto horizontalmente */
+      padding: 20px 0; /* Añade espacio alrededor del título */
+    }
+    a:hover {
+      background-color: #52be80; /* Cambia el color al pasar el mouse sobre el botón */
+    }
+
+    /* Puedes agregar más estilos según sea necesario */
+
+  </style>
+
   <h1>Productos Disponibles</h1>
   <ul>
     {% for product in products %}
       <li>
         {{ product.name }} - Precio: {{ product.price }}
-        <a href="#" onclick="addToCart({{ product.id }})">Agregar al carrito</a>
+        
+        <a href="#" onclick="addToCart({{ product.id }})">
+          <span class="add-to-cart-icon" aria-hidden="true"></span>
+          Agregar al carrito
+        </a>
       </li>
     {% endfor %}
   </ul>
