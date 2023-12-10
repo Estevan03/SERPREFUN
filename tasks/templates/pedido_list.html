@@ -1,43 +1,106 @@
-<!-- pedido_list.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Listado de Pedidos</h1>
   <style>
-    
     h1 {
-      color: black; /* Color del título principal */
-      text-align: center; /* Centra el texto horizontalmente */
+      color: black;
+      text-align: center;
     }
-  
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-  
-    li {
-      
+
+    .pedido-box {
+      margin-bottom: 20px;
       padding: 15px;
-      margin-bottom: 15px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave alrededor de cada recuadro */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-  
-    li:not(:last-child) {
-      /* Aplica margen inferior solo a elementos que no sean el último para separarlos */
+
+    .pedido-box:not(:last-child) {
       margin-bottom: 20px;
     }
-  
-    /* Agrega más estilos según sea necesario */
+
+    .pedido-details {
+      margin-bottom: 10px;
+    }
+
+    .product-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .product-item {
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      margin-bottom: 5px;
+      padding: 8px;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 5px;
+    }
+
+    button {
+      padding: 8px 12px;
+      background-color: #007BFF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
   </style>
-  
-  <ul>
+
+  <h1>Listado de Pedidos</h1>
+
+  {% if pedidos %}
     {% for pedido in pedidos %}
-      <li>
-        Cliente: {{ pedido.user.username }}<br>
-        Servicio: {{ pedido.service.name }}<br>
-        <!-- Agrega más detalles según sea necesario -->
-      </li>
+      <div class="pedido-box">
+        <h3 class="pedido-details">Pedido para {{ pedido.nombre_completo }}</h3>
+        <p class="pedido-details">Cliente: {{ pedido.user.username }}</p>
+        <p class="pedido-details">Servicio: {{ pedido.service.name }}</p>
+        <div class="product-list">
+          <strong>Productos:</strong>
+          {% for cart_item in pedido.service.cartitem_set.all %}
+            <div class="product-item">{{ cart_item.product.name }} - Cantidad: {{ cart_item.quantity }}</div>
+          {% endfor %}
+        </div>
+        <div class="button-container">
+          <form method="post" action="{% url 'eliminar_pedido' pedido.id %}">
+            {% csrf_token %}
+            <button type="submit">Eliminar</button>
+          </form>
+          <a href="{% url 'detalles_pedido' pedido.id %}"><button>Ver Detalles</button></a>
+        </div>
+      </div>
     {% endfor %}
-  </ul>
+  {% endif %}
+
+  {% if solicitudes_productos %}
+    <div class="pedido-box">
+      <h3 class="pedido-details">Solicitudes de Productos</h3>
+      <div class="product-list">
+        {% for solicitud_producto in solicitudes_productos %}
+          <div class="product-item">
+            <strong>Cliente:</strong> {{ solicitud_producto.user.username }}<br>
+            <strong>Productos:</strong>
+            {% for cart_item in solicitud_producto.cartitem_set.all %}
+              {{ cart_item.product.name }} - Cantidad: {{ cart_item.quantity }}<br>
+            {% endfor %}
+            <div class="button-container">
+              <form method="post" action="{% url 'eliminar_pedido' solicitud_producto.id %}">
+                {% csrf_token %}
+                <button type="submit">Eliminar</button>
+              </form>
+              <a href="{% url 'detalles_pedido' solicitud_producto.id %}"><button>Ver Detalles</button></a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}

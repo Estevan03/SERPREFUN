@@ -1,5 +1,50 @@
-<h1>{{ service.name }}</h1>
-<p>{{ service.description }}</p>
-<p>Precio: ${{ service.price }}</p>
-<a href="{% url 'employee_service_list' %}">Regresar</a>
-<!-- Otros detalles que desees mostrar -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- Tabla para mostrar detalles -->
+  <table class="service-details">
+    <thead>
+      <tr>
+        <th>Campo</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Nombre</td>
+        <td>{{ service.name }}</td>
+      </tr>
+      <tr>
+        <td>Descripción</td>
+        <td>{{ service.description }}</td>
+      </tr>
+      <tr>
+        <td>Precio</td>
+        <td>${{ service.price }}</td>
+      </tr>
+      <!-- Agrega más filas según sea necesario -->
+    </tbody>
+  </table>
+  <!-- Fin de la tabla -->
+
+  <!-- Otros detalles que desees mostrar -->
+{% endblock %}
+
+<style>
+  /* Estilos para la tabla */
+  .service-details {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .service-details th, .service-details td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .service-details th {
+    background-color: #f2f2f2;
+  }
+</style>

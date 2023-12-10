@@ -12,28 +12,29 @@
       margin: 0;
       padding: 0;
     }
-  
+
     h1 {
       color: black; /* Color del título principal */
       text-align: center; /* Centra el texto horizontalmente */
       padding: 20px 0; /* Añade espacio alrededor del título */
     }
-  
-    ul {
-      list-style: none;
-      padding: 0;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-  
-    li {
-      
+
+    th, td {
+      border: 1px solid #ddd;
       padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      text-align: left;
     }
-  
+
+    th {
+      background-color: #f2f2f2;
+    }
+
     button {
       background-color: #3498db; /* Color de fondo del botón */
       color: #fff; /* Color del texto del botón */
@@ -43,28 +44,43 @@
       cursor: pointer;
       transition: background-color 0.3s ease-in-out;
     }
-  
+
     button:hover {
       background-color: #2980b9; /* Cambia el color al pasar el mouse sobre el botón */
     }
-  
+
     /* Puedes ajustar los estilos según tus preferencias */
   </style>
-  <ul>
-    {% for service in services %}
-      <li>
-        {{ service.name }} - Precio: {{ service.price }}
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#serviceModal{{ service.id }}">
-          Adquirir
-        </button>
-      </li>
-    {% endfor %}
-  </ul>
   
+  <!-- Tabla para mostrar los servicios -->
+  <table>
+    <thead>
+      <tr>
+        <th>Servicio</th>
+        <th>Precio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for service in services %}
+        <tr>
+          <td>{{ service.name }}</td>
+          <td>{{ service.price }}</td>
+          <td>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#serviceModal{{ service.id }}">
+              Adquirir
+            </button>
+            <a href="{% url 'service_detail' service.id %}">Ver detalles</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- Fin de la tabla -->
 
   <!-- Modal -->
   {% for service in services %}
-  <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -90,5 +106,3 @@
   {% endfor %}
   
 {% endblock %}
-
-

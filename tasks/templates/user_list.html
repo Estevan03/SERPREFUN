@@ -1,5 +1,6 @@
-<!-- user_list.html -->
+{% extends 'base.html' %}
 
+{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,20 +21,23 @@
             margin-bottom: 20px;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
+        table {
             width: 70%;
             margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        li {
-            background-color: #ffffff;
+        th, td {
             border: 1px solid #dcdcdc;
-            margin-bottom: 20px;
-            padding: 20px;
+            padding: 15px;
+            text-align: left;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background-color: #ffffff;
         }
 
         a {
@@ -80,39 +84,46 @@
         }
     </style>
 </head> 
-</head>
 <body>
     <h1>Lista de Usuarios</h1>
-    <ul>
+    <table>
+        <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
         {% for user_with_permissions in users_with_permissions %}
-            <li>
-                {{ user_with_permissions.user.username }} - Rol: {{ user_with_permissions.user.get_role_display }}
-                <a href="{% url 'editar_usuario' user_with_permissions.user.id %}">Editar</a>
+            <tr>
+                <td>{{ user_with_permissions.user.username }}</td>
+                <td>{{ user_with_permissions.user.get_role_display }}</td>
+                <td>
+                    <a href="{% url 'editar_usuario' user_with_permissions.user.id %}">Editar</a>
 
-                {% if user_with_permissions.user.role == 'admin' or user_with_permissions.user.role == 'empleado' %}
-                    <form action="{% url 'manage_user_permissions' user_with_permissions.user.id %}" method="post">
-                        {% csrf_token %}
-                        {{ user_with_permissions.form.as_p }}
-                        <button type="submit">Guardar Permisos</button>
-                    </form>
-                {% endif %}
+                    {% if user_with_permissions.user.role == 'admin' or user_with_permissions.user.role == 'empleado' %}
+                        <form action="{% url 'manage_user_permissions' user_with_permissions.user.id %}" method="post">
+                            {% csrf_token %}
+                            {{ user_with_permissions.form.as_p }}
+                            <button type="submit">Guardar Permisos</button>
+                        </form>
+                    {% endif %}
 
-                {% if user_with_permissions.user.is_active %}
-                    <form action="{% url 'desactivar_usuario' user_with_permissions.user.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Desactivar</button>
-                    </form>
-                {% else %}
-                    <form action="{% url 'activar_usuario' user_with_permissions.user.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Activar</button>
-                    </form>
-                {% endif %}
+                    {% if user_with_permissions.user.is_active %}
+                        <form action="{% url 'desactivar_usuario' user_with_permissions.user.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Desactivar</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'activar_usuario' user_with_permissions.user.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Activar</button>
+                        </form>
+                    {% endif %}
 
-                <a href="{% url 'ver_perfil' user_with_permissions.user.id %}">Ver perfil</a>
-            </li>
+                    <a href="{% url 'ver_perfil' user_with_permissions.user.id %}">Ver perfil</a>
+                </td>
+            </tr>
         {% endfor %}
-    </ul>
-    <a href="{% url 'tasks' %}">Regresar</a>
+    </table>
 </body>
 </html>
+{% endblock %}

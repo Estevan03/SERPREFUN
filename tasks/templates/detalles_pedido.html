@@ -1,0 +1,13 @@
+<!-- detalles_pedido.html -->
+<h2>Detalles del Pedido</h2>
+<p>Cliente: {{ pedido.user.username }}</p>
+<p>Servicio: {{ pedido.service.name }}</p>
+
+<!-- Mostrar todos los campos del formulario -->
+<p>Nombre Completo: {{ pedido.nombre_completo }}</p>
+<p>Tipo de Documento: {{ pedido.tipo_documento }}</p>
+<p>Número de Documento: {{ pedido.numero_documento }}</p>
+<p>Correo Electrónico: {{ pedido.correo_electronico }}</p>
+<p>Número de Celular: {{ pedido.numero_celular }}</p>
+<p>Dirección: {{ pedido.direccion }}</p>
+<!-- Agrega más campos según sea necesario -->

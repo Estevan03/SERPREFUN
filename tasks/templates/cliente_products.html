@@ -14,39 +14,67 @@
       position: relative;
     }
 
-    
-
     .add-to-cart-icon::before {
       content: '\1F6D2'; /* Código unicode para el icono del carrito de compras */
       font-size: 20px;
       margin-right: 5px;
     }
+
     h1 {
       color: black; /* Color del título principal */
       text-align: center; /* Centra el texto horizontalmente */
       padding: 20px 0; /* Añade espacio alrededor del título */
     }
+
     a:hover {
       background-color: #52be80; /* Cambia el color al pasar el mouse sobre el botón */
     }
 
-    /* Puedes agregar más estilos según sea necesario */
+    /* Estilos para la tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
 
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
   </style>
 
   <h1>Productos Disponibles</h1>
-  <ul>
-    {% for product in products %}
-      <li>
-        {{ product.name }} - Precio: {{ product.price }}
-        
-        <a href="#" onclick="addToCart({{ product.id }})">
-          <span class="add-to-cart-icon" aria-hidden="true"></span>
-          Agregar al carrito
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+
+  <!-- Tabla para mostrar productos -->
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
+          <td>
+            <a href="#" onclick="addToCart({{ product.id }})">
+              <span class="add-to-cart-icon" aria-hidden="true"></span>
+              Agregar al carrito
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- Fin de la tabla -->
 
   <!-- Mensaje de confirmación -->
   {% if messages %}

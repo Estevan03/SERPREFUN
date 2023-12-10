@@ -1,39 +1,128 @@
 {% extends 'base.html' %} 
 {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Página</title>
+  <!-- Agrega aquí tus enlaces a hojas de estilo, si es necesario -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f4f4f4;
+    }
 
-{% if user.role == 'cliente' %}
-  <h1>Cliente</h1>
-  <!-- Contenido específico para clientes -->
-{% elif user.role == 'empleado' %}
-  <h1>Empleado</h1>
-  <!-- Contenido específico para empleados -->
-{% else %}
-  <h1>Administrador</h1>
-  {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+    .content-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #E1F8FF; /* Color de fondo azul claro */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border-radius: 8px;
+    }
 
-  <!-- Contenido específico para administradores -->
-{% endif %}
+    h1 {
+      color: #333;
+      text-transform: uppercase; /* Transforma el texto a mayúsculas */
+    }
 
-<ul>
-  {% for task in tasks %}
-    <li>
-      <a href="{% url 'task_detail' task.id %}">
-        {% if task.important %}
-          <strong>{{task.title}}</strong>
-        {% else %}
-          {{task.id}} {{task.title}}
-        {% endif %}
-        <p>{{task.description}}</p>
-        {{task.datecompleted|date:'M j Y:i'}}
-      </a>
-    </li>
-  {% endfor %}
-</ul>
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 15px;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .important-task {
+      font-weight: bold;
+    }
+
+    .messages {
+      padding: 0;
+    }
+
+    .messages li {
+      margin-bottom: 10px;
+    }
+
+    .error {
+      color: #e74c3c;
+    }
+
+    .success {
+      color: #27ae60;
+    }
+
+    .user-info {
+      background: #B3FFCE; /* Color de fondo azul claro */
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .user-name {
+      font-size: 1.5em; /* Tamaño de letra del nombre del usuario */
+      color: #333; /* Color del texto del nombre del usuario */
+      margin-bottom: 10px; /* Espacio inferior para separar el nombre del mensaje de bienvenida */
+    }
+
+    .welcome-message {
+      font-size: 1.2em; /* Tamaño de letra para el mensaje de bienvenida */
+      color: #333; /* Color del texto del mensaje de bienvenida */
+    }
+  </style>
+  <!-- Agrega aquí tus enlaces a hojas de estilo, si es necesario -->
+</head>
+<body>
+
+  <div class="content-container">
+    <div class="user-info">
+      {% if user.role %}
+        <h1>{{ user.role|title }}</h1>
+        <p class="welcome-message">Bienvenido</p>
+      {% endif %}
+      {% if user.username %}
+        <p class="user-name">{{ user.username }}</p>
+      {% endif %}
+
+      {% if user.role == 'administrador' and messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  
+    <ul>
+      {% for task in tasks %}
+        <li>
+          <a href="{% url 'task_detail' task.id %}">
+            {% if task.important %}
+              <span class="important-task">{{task.title}}</span>
+            {% else %}
+              {{task.id}} {{task.title}}
+            {% endif %}
+            <p>{{task.description}}</p>
+            {{task.datecompleted|date:'M j Y:i'}}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>
 
 {% endblock %}

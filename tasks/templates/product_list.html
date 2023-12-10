@@ -51,10 +51,9 @@
   <div class="product-list">
     {% for product in productos %}
       <div class="product-item">
-        <img src="{{ product.image_url }}" alt="{{ product.name }}">
         <div class="product-details">
           <h2>{{ product.name }}</h2>
-          <p class="price">Precio: 20.0 {{ product.price }}</p>
+          <p class="price">Precio: {{ product.price }}</p>
           <div class="product-actions">
             <a href="{% url 'edit_product' product.id %}">Editar</a>
             <a href="{% url 'delete_product' product.id %}">Eliminar</a>

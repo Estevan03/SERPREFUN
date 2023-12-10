@@ -77,8 +77,10 @@ class CartItem(models.Model):
         # No hacemos nada aquí, ya que el total se calcula automáticamente
         pass
 
+# models.py
+
 class Pedido(models.Model):
-    servicio = models.ForeignKey(Service, on_delete=models.CASCADE)
+    servicios = models.ManyToManyField(Service, blank=True)
     nombre_completo = models.CharField(max_length=255)
     tipo_documento = models.CharField(max_length=50)
     numero_documento = models.CharField(max_length=50)
@@ -89,6 +91,9 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"Pedido para {self.nombre_completo}"
+
+
+
 
 class ServiceRequest(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='service_requests', default=1)  # Ajusta el valor predeterminado según tus necesidades
@@ -102,3 +107,16 @@ class ServiceRequest(models.Model):
 
     def __str__(self):
         return f"Solicitud de servicio para {self.full_name}"
+    
+class PedidoProducto(models.Model):
+    productos = models.ManyToManyField(Product, blank=True)
+    nombre_completo = models.CharField(max_length=255)
+    tipo_documento = models.CharField(max_length=50)
+    numero_documento = models.CharField(max_length=50)
+    correo_electronico = models.EmailField()
+    numero_celular = models.CharField(max_length=20)
+    direccion = models.TextField()
+    fecha_creacion = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Pedido de productos para {self.nombre_completo}"

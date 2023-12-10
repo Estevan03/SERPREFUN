@@ -542,41 +542,73 @@ class ServiceRequestView(View):
         return render(request, self.service_request_form, {'form': form, 'service_id': service_id})
     
 
+from django.db import transaction
+@transaction.atomic
 def buy_products(request):
     if request.method == 'POST':
         form = ShoppingCartForm(request.POST)
         if form.is_valid():
             direccion_envio = form.cleaned_data['direccion_envio']
 
-            # Crear un carrito asociado al usuario cliente
-            shopping_cart = ShoppingCart.objects.create(
+            # Verificar si el usuario ya tiene un carrito
+            shopping_cart, created = ShoppingCart.objects.get_or_create(
                 user=request.user,
-                direccion_envio=direccion_envio
+                defaults={'direccion_envio': direccion_envio}
             )
 
-            # Crear un pedido asociado al carrito
-            pedido = Pedido.objects.create(
-                servicio=None,  # Ajusta esto según tus necesidades
+            # ...
+
+            # Crear un pedido asociado al carrito para servicios
+            pedido_servicio = Pedido.objects.create(
                 nombre_completo=request.user.get_full_name(),
-                tipo_documento='DNI',  # Ajusta esto según tus necesidades
-                numero_documento='12345678',  # Ajusta esto según tus necesidades
+                tipo_documento='DNI',
+                numero_documento='12345678',
                 correo_electronico=request.user.email,
                 numero_celular='123456789',
                 direccion=direccion_envio
             )
 
-            # Asociar cada producto en el carrito al pedido
-            for cart_item in shopping_cart.products.all():
-                pedido.servicio.add(cart_item.service)
-                # Ajusta la lógica según tus necesidades
+            # Crear un pedido asociado al carrito para productos
+            pedido_productos = PedidoProducto.objects.create(
+                nombre_completo=request.user.get_full_name(),
+                tipo_documento='DNI',
+                numero_documento='12345678',
+                correo_electronico=request.user.email,
+                numero_celular='123456789',
+                direccion=direccion_envio
+            )
 
-            # Eliminar el carrito y sus elementos asociados
-             # Limpiar el carrito del usuario después de la compra
-            shopping_cart.products.clear()
+            # ...
+
+            # Asociar servicios al pedido de servicios
+            if shopping_cart.cartitem_set.filter(service__isnull=False).exists():
+                servicios = [cart_item.service for cart_item in shopping_cart.cartitem_set.filter(service__isnull=False)]
+                pedido_servicio.servicios.set(servicios)
+
+            # Asociar productos al pedido de productos
+            if shopping_cart.cartitem_set.filter(product__isnull=False).exists():
+                productos = [cart_item.product for cart_item in shopping_cart.cartitem_set.filter(product__isnull=False)]
+                pedido_productos.productos.set(productos)
+
+            # Limpiar el carrito después de la compra
+            for cart_item in shopping_cart.cartitem_set.all():
+                cart_item.delete()
 
             messages.success(request, 'Compra realizada con éxito. ¡Gracias por tu compra!')
-            return redirect('employee_orders')  # Ajusta la redirección según tus necesidades
+            return redirect('cliente_products')  # Ajusta la redirección según tus necesidades
+
     else:
         form = ShoppingCartForm()
 
     return render(request, 'buy_products.html', {'form': form})
+
+
+
+def eliminar_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    pedido.delete()
+    return redirect('tu_nombre_de_url')
+
+def detalles_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    return render(request, 'detalles_pedido.html', {'pedido': pedido})

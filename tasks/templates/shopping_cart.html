@@ -19,11 +19,27 @@
       text-align: center;
     }
 
-    /* Agrega estilos específicos para el carrito de compras */
+    /* Estilos específicos para el carrito de compras */
     h1 {
       color: black; /* Color del título principal */
       text-align: center; /* Centra el texto horizontalmente */
       padding: 20px 0; /* Añade espacio alrededor del título */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
     }
 
     ul {
@@ -31,45 +47,67 @@
       padding: 0;
     }
 
-
     a {
       color: #27ae60; /* Color del enlace */
       text-decoration: none;
       margin-left: 10px;
       padding: 8px 12px;
       border-radius: 4px;
-      
       transition: background-color 0.3s ease-in-out;
     }
 
     a:hover {
       background-color: #52be80; /* Cambia el color al pasar el mouse sobre el botón */
     }
+
     .actions {
       margin-top: 10px;
-    }
-    a:hover {
-      background-color: #52be80; /* Cambia el color al pasar el mouse sobre el enlace */
     }
 
     /* Puedes agregar más estilos según sea necesario */
 
   </style>
-  <ul>
-    {% for item in cart_items %}
-      <li>
-        {% if item.product %}
-          {{ item.product.name }} - Precio: {{ item.product.price }} - Cantidad: {{ item.quantity }}
-        {% elif item.service %}
-          {{ item.service.name }} - Precio: {{ item.service.price }} - Cantidad: {{ item.quantity }}
-        {% endif %}
-        <a href="{% url 'remove_one' item.product.id %}" onclick="removeOne('{{ item.id }}')">Eliminar 1</a>
-        <a href="{% url 'remove_all' item.product.id %}" onclick="removeAll('{{ item.id }}')">Eliminar Todo</a>
-        <a href="{% url 'add_one' item.product.id %}" onclick="addOne('{{ item.id }}')">Agregar 1</a>
-      </li>
-      <a href="{% url 'buy_products' %}">Comprar Productos</a>
-    {% endfor %}
-  </ul>
+
+  <!-- Tabla para mostrar los elementos del carrito de compras -->
+  <table>
+    <thead>
+      <tr>
+        <th>Producto/Servicio</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+        <tr>
+          <td>
+            {% if item.product %}
+              {{ item.product.name }}
+            {% elif item.service %}
+              {{ item.service.name }}
+            {% endif %}
+          </td>
+          <td>
+            {% if item.product %}
+              {{ item.product.price }}
+            {% elif item.service %}
+              {{ item.service.price }}
+            {% endif %}
+          </td>
+          <td>{{ item.quantity }}</td>
+          <td>
+            <a href="{% url 'remove_one' item.product.id %}" onclick="removeOne('{{ item.id }}')">Eliminar 1</a>
+            <a href="{% url 'remove_all' item.product.id %}" onclick="removeAll('{{ item.id }}')">Eliminar Todo</a>
+            <a href="{% url 'add_one' item.product.id %}" onclick="addOne('{{ item.id }}')">Agregar 1</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- Fin de la tabla -->
+
+  <a href="{% url 'buy_products' %}">Comprar Productos</a>
 
   <script>
     function removeOne(item_id) {

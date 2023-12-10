@@ -59,4 +59,6 @@ urlpatterns = [
     path('request-service/<int:service_id>/', views.ServiceRequestView.as_view(), name='request_service'),
     path('pedidos/', views.pedido_list, name='pedido_list'),
     path('buy-products/', views.buy_products, name='buy_products'),
+    path('eliminar_pedido/<int:pedido_id>/', views.eliminar_pedido, name='eliminar_pedido'),
+    path('detalles_pedido/<int:pedido_id>/', views.detalles_pedido, name='detalles_pedido'),
 ]

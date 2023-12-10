@@ -4,71 +4,81 @@
 {% block content %}
   <h1>Lista de Servicios para Empleados</h1>
   <style>
-    
-  
     h1 {
-      color: black; /* Color del título principal */
-      text-align: center; /* Centra el texto horizontalmente */
+      color: #333;
+      text-align: center;
     }
-  
-    ul {
-      list-style: none;
-      padding: 0;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-  
-    li {
-      
+
+    th, td {
       padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
-  
+
+    th {
+      background-color: #f2f2f2;
+    }
+
     a {
-      color: black; /* Color del enlace */
+      color: #333;
       text-decoration: none;
       padding: 8px;
       border-radius: 4px;
       transition: background-color 0.3s ease-in-out;
     }
-  
+
     a:hover {
-      background-color: #d2f1c2; /* Cambia el color al pasar el mouse sobre el enlace */
+      background-color: #d2f1c2;
     }
-  
+
     .add-service-link {
-      display: block;
+      display: inline-block;
       margin-top: 20px;
-      color: #fff; /* Color del texto del enlace de agregar nuevo servicio */
-      background-color: #3498db; /* Color de fondo del enlace de agregar nuevo servicio */
+      color: #fff;
+      background-color: #3498db;
       padding: 10px;
       text-align: center;
       border-radius: 4px;
       text-decoration: none;
       transition: background-color 0.3s ease-in-out;
     }
-  
+
     .add-service-link:hover {
-      background-color: #2980b9; /* Cambia el color al pasar el mouse sobre el enlace de agregar nuevo servicio */
+      background-color: #2980b9;
     }
   </style>
+
   {% if services %}
-    <ul>
-      {% for service in services %}
-        <li>
-          {{ service.name }}
-          <a href="{% url 'service_detail' service.id %}">Ver detalles</a>
-          <a href="{% url 'edit_service' service.id %}">Editar</a>
-          <a href="{% url 'delete_service' service.id %}">Eliminar</a>
-        </li>
-        <!-- Puedes mostrar más detalles del servicio según tus necesidades -->
-      {% endfor %}
-    </ul>
-    <a href="{% url 'add_service' %}">Agregar Nuevo Servicio</a>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del Servicio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+          <tr>
+            <td>{{ service.name }}</td>
+            <td>
+              <a href="{% url 'service_detail' service.id %}">Ver detalles</a>
+              <a href="{% url 'edit_service' service.id %}">Editar</a>
+              <a href="{% url 'delete_service' service.id %}">Eliminar</a>
+            </td>
+          </tr>
+          <!-- Puedes mostrar más detalles del servicio según tus necesidades -->
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'add_service' %}" class="add-service-link">Agregar Nuevo Servicio</a>
   {% else %}
     <p>No hay servicios disponibles.</p>
-    <a href="{% url 'add_service' %}">Agregar Nuevo Servicio</a>
+    <a href="{% url 'add_service' %}" class="add-service-link">Agregar Nuevo Servicio</a>
   {% endif %}
 {% endblock %}

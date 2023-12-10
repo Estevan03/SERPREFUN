@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,8 +13,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: flex-start; /* Alinea el contenido en la parte superior */
+            min-height: 100vh;
         }
 
         h1 {
@@ -33,6 +35,8 @@
 <body>
     <h1>Perfil de Usuario</h1>
     <p>Nombre de usuario: {{ user.username }}</p>
-    <!-- Otros campos del perfil del usuario -->
+    <p>Correo electrónico: {{ user.email }}</p>
+    <p>Rol: {{ user.get_role_display }}</p>
 </body>
 </html>
+{% endblock %}

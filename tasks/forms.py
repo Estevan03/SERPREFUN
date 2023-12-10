@@ -52,7 +52,7 @@ class PedidoForm(forms.ModelForm):
 class ServiceRequestForm(forms.ModelForm):
     class Meta:
         model = ServiceRequest
-        fields = ['full_name', 'document_type', 'document_number', 'email', 'phone_number', 'address', 'service']
+        fields = ['full_name', 'document_type', 'document_number', 'email', 'phone_number', 'address',]
         
 class ShoppingCartForm(forms.Form):
     # Puedes agregar más campos según tus necesidades
