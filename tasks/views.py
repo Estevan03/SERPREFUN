@@ -9,9 +9,10 @@ from tasks.forms import CustomUserForm,ServiceRequestForm
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib import messages
 from .cart import Cart
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from .forms import ServiceForm
 from django.views import View
+import logging
 
 # Vista para el registro
 def signup(request):
@@ -603,12 +604,25 @@ def buy_products(request):
     return render(request, 'buy_products.html', {'form': form})
 
 
-
 def eliminar_pedido(request, pedido_id):
+    print(f"Intentando eliminar pedido con ID: {pedido_id}")
+
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    pedido.delete()
-    return redirect('tu_nombre_de_url')
+
+    if request.method == 'POST':
+        print("Método POST recibido")
+        try:
+            pedido.delete()
+            print("Pedido eliminado exitosamente")
+            return redirect('eliminacion_confirmada')
+        except Exception as e:
+            print(f"Error al eliminar el pedido: {e}")
+
+    return HttpResponse("Petición no válida o error al eliminar el pedido.")
 
 def detalles_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     return render(request, 'detalles_pedido.html', {'pedido': pedido})
+
+def eliminacion_confirmada(request):
+    return render(request, 'eliminacion_confirmada.html')

@@ -61,4 +61,5 @@ urlpatterns = [
     path('buy-products/', views.buy_products, name='buy_products'),
     path('eliminar_pedido/<int:pedido_id>/', views.eliminar_pedido, name='eliminar_pedido'),
     path('detalles_pedido/<int:pedido_id>/', views.detalles_pedido, name='detalles_pedido'),
+    path('eliminacion_confirmada/', views.eliminacion_confirmada, name='eliminacion_confirmada'),
 ]

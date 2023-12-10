@@ -12,11 +12,10 @@ class TaskForm(forms.ModelForm):
         
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField()
-    role = forms.ChoiceField(choices=CustomUser.ROLES, initial='cliente')
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'role']
+        fields = ['username', 'email', 'password1', 'password2', ]
 
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
